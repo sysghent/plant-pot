@@ -39,6 +39,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-board"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "embassy-embedded-hal",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "embedded-hal-async",
+]
+
+[[package]]
 name = "atomic-polyfill"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -368,6 +384,8 @@ dependencies = [
  "embassy-hal-internal",
  "embassy-sync",
  "embassy-time",
+ "embassy-time-driver",
+ "embassy-time-queue-utils",
  "embassy-usb-driver",
  "embedded-hal 0.2.7",
  "embedded-hal 1.0.0",
@@ -424,6 +442,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d45f5d833b6d98bd2aab0c2de70b18bfaa10faf661a1578fd8e5dfb15eb7eba"
 dependencies = [
  "document-features",
+]
+
+[[package]]
+name = "embassy-time-queue-utils"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc55c748d16908a65b166d09ce976575fb8852cf60ccd06174092b41064d8f83"
+dependencies = [
+ "embassy-executor",
+ "heapless",
 ]
 
 [[package]]
@@ -702,6 +730,17 @@ checksum = "0bfb9eb618601c89945a70e254898da93b13be0388091d42117462b265bb3fad"
 dependencies = [
  "hash32",
  "stable_deref_trait",
+]
+
+[[package]]
+name = "high-level-board"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "embedded-hal 1.0.0",
+ "panic-halt",
+ "rp-pico",
 ]
 
 [[package]]
@@ -1284,6 +1323,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "serial-monitor"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "heapless",
+ "panic-halt",
+ "rp-pico",
+ "usb-device",
+ "usbd-serial",
+]
+
+[[package]]
 name = "sha2-const-stable"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1327,27 +1378,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "edeb89c73244414bb0568611690dd095b2358b3fda5bae65ad784806cca00157"
 dependencies = [
  "rgb",
-]
-
-[[package]]
-name = "smart-plant-pot"
-version = "0.1.0"
-dependencies = [
- "cortex-m",
- "cortex-m-rt",
- "embassy-embedded-hal",
- "embassy-executor",
- "embassy-futures",
- "embassy-rp",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "embedded-hal 1.0.0",
- "heapless",
- "panic-halt",
- "rp-pico",
- "usb-device",
- "usbd-serial",
 ]
 
 [[package]]

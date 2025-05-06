@@ -1,0 +1,1 @@
+Mostly taken from [rp-hal-boards](https://github.com/rp-rs/rp-hal-boards).

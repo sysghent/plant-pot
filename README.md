@@ -68,7 +68,7 @@ If you use the provided `.cargo/Config.toml` file, you can just run the followin
 cargo run
 ```
 
-This will implicitly call `elf2uf2-rs -d` to convert the ELF.
+This will implicitly call `elf2uf2-rs -d` to convert the ELF and copy it to the Pic storage.
 
 ## Basic examples
 

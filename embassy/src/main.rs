@@ -9,7 +9,7 @@ use embassy_executor::Spawner;
 use embassy_rp::gpio;
 use embassy_time::Timer;
 use gpio::{Input, Level, Output, Pull};
-
+use panic_halt as _;
 /// It requires an external signal to be manually triggered on PIN 16. For
 /// example, this could be accomplished using an external power source with a
 /// button so that it is possible to toggle the signal from low to high.

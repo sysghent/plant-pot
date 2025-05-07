@@ -4,9 +4,9 @@ name = "bsp-serial"
 version = "0.1.0"
 
 [dependencies]
-cortex-m-rt = { workspace = true }
+cortex-m-rt.workspace = true
 heapless = "0.8.0"
 panic-halt.workspace = true
-rp-pico = "0.9.0"
+rp-pico.workspace = true
 usb-device = "0.3.2"
 usbd-serial = "0.2.2"

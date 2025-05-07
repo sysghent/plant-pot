@@ -7,6 +7,7 @@ pkgs.mkShell {
     picotool
     elf2uf2-rs
     nushell
+    cargo-binutils
   ];
 
   nativeBuildInputs = with pkgs; [

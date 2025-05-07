@@ -7,14 +7,6 @@ resolver = "2"
 cortex-m = { version = "0.7.6", features = [
     "inline-asm",
 ], default-features = false }
-
+cortex-m-rt = { version = "0.7.0" }
 embedded-hal = "1.0.0"
 panic-halt = "1.0.0"
-
-
-[profile.release]
-codegen-units = 1
-lto = true
-opt-level = "z"
-panic = "abort"
-strip = true

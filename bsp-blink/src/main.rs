@@ -1,9 +1,11 @@
-//! # Pico Blinky Example
+//! # Pico GPIO In/Out Example
 //!
-//! Blinks the LED on a Pico board.
+//! Toggles the LED based on GPIO input.
 //!
-//! This will blink an LED attached to GP25, which is the pin the Pico uses for
-//! the on-board LED.
+//! This will control an LED on GP25 based on a button hooked up to GP15. The
+//! button should cause the line to be grounded, as the input pin is pulled high
+//! internally by this example. When the button is pressed, the LED will turn
+//! off.
 //!
 //! See the `Cargo.toml` file for Copyright and license details.
 
@@ -14,14 +16,11 @@
 use rp_pico::entry;
 
 // GPIO traits
-use embedded_hal::digital::OutputPin;
+use embedded_hal::digital::{InputPin, OutputPin};
 
 // Ensure we halt the program on panic (if we don't mention this crate it won't
 // be linked)
 use panic_halt as _;
-
-// Pull in any important traits
-use rp_pico::hal::prelude::*;
 
 // A shorter alias for the Peripheral Access Crate, which provides low-level
 // register access
@@ -36,35 +35,15 @@ use rp_pico::hal;
 /// The `#[entry]` macro ensures the Cortex-M start-up code calls this function
 /// as soon as all global variables are initialised.
 ///
-/// The function configures the RP2040 peripherals, then blinks the LED in an
-/// infinite loop.
+/// The function configures the RP2040 peripherals, then just reads the button
+/// and sets the LED appropriately.
 #[entry]
 fn main() -> ! {
     // Grab our singleton objects
     let mut pac = pac::Peripherals::take().unwrap();
-    let core = pac::CorePeripherals::take().unwrap();
 
-    // Set up the watchdog driver - needed by the clock setup code
-    let mut watchdog = hal::Watchdog::new(pac.WATCHDOG);
-
-    // Configure the clocks
-    //
-    // The default is to generate a 125 MHz system clock
-    let clocks = hal::clocks::init_clocks_and_plls(
-        rp_pico::XOSC_CRYSTAL_FREQ,
-        pac.XOSC,
-        pac.CLOCKS,
-        pac.PLL_SYS,
-        pac.PLL_USB,
-        &mut pac.RESETS,
-        &mut watchdog,
-    )
-    .ok()
-    .unwrap();
-
-    // The delay object lets us wait for specified amounts of time (in
-    // milliseconds)
-    let mut delay = cortex_m::delay::Delay::new(core.SYST, clocks.system_clock.freq().to_Hz());
+    // Note - we don't do any clock set-up in this example. The RP2040 will run
+    // at it's default clock speed.
 
     // The single-cycle I/O block controls our GPIO pins
     let sio = hal::Sio::new(pac.SIO);
@@ -77,16 +56,18 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    // Set the LED to be an output
+    // Our LED output
     let mut led_pin = pins.led.into_push_pull_output();
 
-    // Blink the LED at 1 Hz
+    // Our button input
+    let mut button_pin = pins.gpio15.into_pull_up_input();
+
+    // Run forever, setting the LED according to the button
     loop {
-        led_pin.set_high().unwrap();
-        delay.delay_ms(500);
-        led_pin.set_low().unwrap();
-        delay.delay_ms(500);
+        if button_pin.is_low().unwrap() {
+            led_pin.set_high().unwrap();
+        } else {
+            led_pin.set_low().unwrap();
+        }
     }
 }
-
-// End of file

@@ -4,24 +4,66 @@ name = "embassy"
 version = "0.1.0"
 
 [dependencies]
-cortex-m = { workspace = true }
-cortex-m-rt = { workspace = true }
-embassy-embedded-hal = { version = "0.3.0" }
+
+
+cortex-m-rt = { version = "0.7.0" }
+panic-halt.workspace = true
+
 embassy-executor = { version = "0.7.0", features = [
+
+
     "arch-cortex-m",
-    "executor-interrupt",
+
+
     "executor-thread",
+
+
+    "executor-interrupt",
+
+
 ] } # Choose an executor mode
-embassy-futures = { version = "0.1.1" }
-embassy-rp = { version = "0.4.0", default-features = false, features = [
-    "critical-section-impl",
-    "rp2040",
-    "time-driver",
-    "unstable-pac",
-] }
-embassy-sync = { version = "0.6.2" } # For async mutexes, channels if needed
+
+
 embassy-time = { version = "0.4.0" } # Configure timer tick rate
+
+
+embassy-sync = { version = "0.6.2" } # For async mutexes, channels if needed
+
+
+embassy-futures = { version = "0.1.1" }
+
+
+embassy-rp = { version = "0.4.0", default-features = false, features = [
+
+
+    "unstable-pac",
+
+
+    "rp2040",
+
+
+    "time-driver",
+
+
+    "critical-section-impl",
+
+
+] }
+
+
 embassy-usb = { version = "0.4.0" }
 
+
+embassy-embedded-hal = { version = "0.3.0" }
+
+
+cortex-m = { version = "0.7.6", features = [
+
+
+    "inline-asm",
+
+
+], default-features = false }
+
+
 embedded-hal-async = "1.0"
-panic-halt = { workspace = true }

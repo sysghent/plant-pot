@@ -14,6 +14,7 @@ pkgs.mkShell {
   ];
 
   shellHook = ''
+    export NIX_ENFORCE_PURITY=0
     ${pkgs.nushell}/bin/nu
   '';
 }

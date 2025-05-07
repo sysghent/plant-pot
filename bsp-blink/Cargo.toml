@@ -1,20 +1,11 @@
 [package]
+edition = "2024"
 name = "bsp-blink"
 version = "0.1.0"
-edition = "2024"
 
 [dependencies]
-cortex-m = { version = "0.7.6", features = [
-    "inline-asm",
-
-], default-features = false }
-
-cortex-m-rt = { version = "0.7.0", default-features = false, features = [
-    "device",
-] }
+cortex-m = { workspace = true }
+cortex-m-rt = { workspace = true }
 embedded-hal.workspace = true
 panic-halt.workspace = true
-rp-pico = { version = "0.9.0", default-features = false, features = [
-    "rt",
-    "critical-section-impl",
-] }
+rp-pico = { version = "0.9.0" }

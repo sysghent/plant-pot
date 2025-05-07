@@ -1,9 +1,12 @@
 
 [workspace]
+members = ["bsp-blink", "bsp-serial", "embassy"]
 resolver = "2"
-members = ["embassy", "bsp-blink", "bsp-serial"]
 
 [workspace.dependencies]
-
+cortex-m = { version = "0.7.6", features = [
+    "inline-asm",
+], default-features = false }
+cortex-m-rt = { version = "0.7.0" }
 embedded-hal = "1.0.0"
 panic-halt = "1.0.0"

@@ -6,12 +6,12 @@ In this workshop you will learn how to create a plant pot that can automatically
 
 We will use hardware (est. 25 euros):
 
-- Raspberry Pico (with headers)
+- Raspberry Pico H (with soldered headers)
 - Analogue (?) capacitive humidity sensor
 - Small 5V water pump
-- Breadboard
-- Wires
-
+- Small breadboard
+- Jumper wires
+- Plant + pot (bring your own)
 
 ## Install toolchain for Pico
 
@@ -25,6 +25,23 @@ rustup target add thumbv6m-none-eabi
 
 Setup the linker configuration in `.cargo/Config.toml`. It is important to have a `memory.x` file in the root for linking.
 
+
+## Levels of abstraction
+
+Processor: 
+- cortex-m https://crates.io/crates/cortex-m
+
+Peripheral access crate (low level):
+- https://crates.io/crates/rp2040-pac
+
+
+Hardware access layer (medium level): 
+- https://crates.io/crates/rp2040-hal/0.10.2
+- embassy-rp https://crates.io/crates/embassy-rp
+
+Board support packages (high level):
+-  https://crates.io/crates/rp-pico
+
 ## Build
 
 You can now build with:
@@ -35,23 +52,32 @@ cargo build
 
 This will produce an ELF binary (without extension) under [target/ thumbv6m-none-eabi](./target/thumbv6m-none-eabidy).
 
-## Flash setup
+## Mounting the Pico
 
-Hold the button on the pico while connecting it over USB until the device is detect by Linux.
+Hold the button on the pico while connecting it over USB until the device is detected by Linux.
 
 Mount the storage device exposed by the Pico bootloader.
 
-To be able to flash, we need a utility to convert the ELF binary produced by the Rust compiler into a file that can be dropped on the mass storage exposed by the BOOTSEL bootloader mode of the Pico:
+## Modifying binary
+
+Either:
+
+- use `picotool` to convert the ELF to UF2 and copy it manually or 
+- install the `elf2uf2-rs` tool to convert the ELF to UF2 and flash it directly
+
+In case you choose the last:
 
 ```bash
 cargo install elf2uf2-rs
 ```
 
-If you use the provided `.cargo/Config.toml` file, you can just run the following to flash directly on the Pico and reconnect to it in normal mode:
+## Flashing
+
+If you use the same `.cargo/Config.toml` file, you compile (if necessary), convert to UF2 and copy it to the Pico storage with:
 
 ```bash
 cargo run
 ```
 
-This will implicitly call `elf2uf2-rs -d` to convert the ELF and copy it to the Pico storage.
+Otherwise, use a manual invocation of  `elf2uf2-rs -d` do this step.
 

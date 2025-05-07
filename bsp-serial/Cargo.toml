@@ -1,12 +1,10 @@
 [package]
+edition = "2024"
 name = "bsp-serial"
 version = "0.1.0"
-edition = "2024"
 
 [dependencies]
-cortex-m-rt = { version = "0.7.0", default-features = false, features = [
-    "device",
-] }
+cortex-m-rt = { workspace = true }
 heapless = "0.8.0"
 panic-halt.workspace = true
 rp-pico = "0.9.0"

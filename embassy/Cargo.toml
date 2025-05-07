@@ -1,28 +1,26 @@
 [package]
+edition = "2024"
 name = "embassy"
 version = "0.1.0"
-edition = "2024"
 
 [dependencies]
-cortex-m-rt = { version = "0.7.0" }
+cortex-m = { workspace = true }
+cortex-m-rt = { workspace = true }
+embassy-embedded-hal = { version = "0.3.0" }
 embassy-executor = { version = "0.7.0", features = [
     "arch-cortex-m",
-    "executor-thread",
     "executor-interrupt",
+    "executor-thread",
 ] } # Choose an executor mode
-embassy-time = { version = "0.4.0" } # Configure timer tick rate
-embassy-sync = { version = "0.6.2" } # For async mutexes, channels if needed
 embassy-futures = { version = "0.1.1" }
 embassy-rp = { version = "0.4.0", default-features = false, features = [
-    "unstable-pac",
+    "critical-section-impl",
     "rp2040",
     "time-driver",
-    "critical-section-impl",
+    "unstable-pac",
 ] }
+embassy-sync = { version = "0.6.2" } # For async mutexes, channels if needed
+embassy-time = { version = "0.4.0" } # Configure timer tick rate
 embassy-usb = { version = "0.4.0" }
-embassy-embedded-hal = { version = "0.3.0" }
-cortex-m = { version = "0.7.6", features = [
-    "inline-asm",
-], default-features = false }
 
 embedded-hal-async = "1.0"

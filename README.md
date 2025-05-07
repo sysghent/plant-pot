@@ -51,6 +51,9 @@ Hardware access layer (medium level):
 Board support packages (high level):
 -  https://crates.io/crates/rp-pico (actually not that high-level), examples copied in this repo
 
+## Templates
+
+You can get started using one of the templates in this repository.
 
 ## Build
 

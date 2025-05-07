@@ -313,6 +313,7 @@ dependencies = [
  "embassy-time",
  "embassy-usb",
  "embedded-hal-async",
+ "panic-halt",
 ]
 
 [[package]]

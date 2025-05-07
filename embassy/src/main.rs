@@ -1,29 +1,36 @@
+//! This example shows how async gpio can be used with a RP2040.
+//!
+//! The LED on the RP Pico W board is connected differently. See wifi_blinky.rs.
+
 #![no_std]
 #![no_main]
 
 use embassy_executor::Spawner;
 use embassy_rp::gpio;
 use embassy_time::Timer;
-use gpio::{Level, Output};
+use gpio::{Input, Level, Output, Pull};
 
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    for _ in 0..10_000_000 {
-        cortex_m::asm::nop();
-    }
-    cortex_m::asm::udf();
-}
-
+/// It requires an external signal to be manually triggered on PIN 16. For
+/// example, this could be accomplished using an external power source with a
+/// button so that it is possible to toggle the signal from low to high.
+///
+/// This example will begin with turning on the LED on the board and wait for a
+/// high signal on PIN 16. Once the high event/signal occurs the program will
+/// continue and turn off the LED, and then wait for 2 seconds before completing
+/// the loop and starting over again.
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
     let p = embassy_rp::init(Default::default());
     let mut led = Output::new(p.PIN_25, Level::Low);
+    let mut async_input = Input::new(p.PIN_16, Pull::None);
 
     loop {
         led.set_high();
-        Timer::after_secs(1).await;
+
+        async_input.wait_for_high().await;
 
         led.set_low();
-        Timer::after_secs(1).await;
+
+        Timer::after_secs(2).await;
     }
 }

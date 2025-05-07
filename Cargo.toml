@@ -1,8 +1,7 @@
 
 [workspace]
 resolver = "2"
-members = ["async-board", "high-level-board", "serial-monitor"]
-edition = "2021"
+members = ["embassy", "bsp-blink", "bsp-serial"]
 
 [workspace.dependencies]
 

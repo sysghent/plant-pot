@@ -39,22 +39,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "async-board"
-version = "0.1.0"
-dependencies = [
- "cortex-m",
- "cortex-m-rt",
- "embassy-embedded-hal",
- "embassy-executor",
- "embassy-futures",
- "embassy-rp",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "embedded-hal-async",
-]
-
-[[package]]
 name = "atomic-polyfill"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -124,6 +108,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3078c7629b62d3f0439517fa394996acacc5cbc91c5a20d8c658e77abd503a71"
 dependencies = [
  "generic-array",
+]
+
+[[package]]
+name = "bsp-blink"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "embedded-hal 1.0.0",
+ "panic-halt",
+ "rp-pico",
+]
+
+[[package]]
+name = "bsp-serial"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "heapless",
+ "panic-halt",
+ "rp-pico",
+ "usb-device",
+ "usbd-serial",
 ]
 
 [[package]]
@@ -291,6 +298,22 @@ name = "either"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48c757948c5ede0e46177b7add2e67155f70e33c07fea8284df6576da70b3719"
+
+[[package]]
+name = "embassy"
+version = "0.1.0"
+dependencies = [
+ "cortex-m",
+ "cortex-m-rt",
+ "embassy-embedded-hal",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "embedded-hal-async",
+]
 
 [[package]]
 name = "embassy-embedded-hal"
@@ -730,17 +753,6 @@ checksum = "0bfb9eb618601c89945a70e254898da93b13be0388091d42117462b265bb3fad"
 dependencies = [
  "hash32",
  "stable_deref_trait",
-]
-
-[[package]]
-name = "high-level-board"
-version = "0.1.0"
-dependencies = [
- "cortex-m",
- "cortex-m-rt",
- "embedded-hal 1.0.0",
- "panic-halt",
- "rp-pico",
 ]
 
 [[package]]
@@ -1320,18 +1332,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.101",
-]
-
-[[package]]
-name = "serial-monitor"
-version = "0.1.0"
-dependencies = [
- "cortex-m-rt",
- "heapless",
- "panic-halt",
- "rp-pico",
- "usb-device",
- "usbd-serial",
 ]
 
 [[package]]

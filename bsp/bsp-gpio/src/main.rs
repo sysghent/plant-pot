@@ -72,20 +72,19 @@ fn main() -> ! {
     let mut adc = hal::Adc::new(pac.ADC, &mut pac.RESETS);
 
     let mut humidity_pin = AdcPin::new(pins.gpio26).unwrap();
-
+    let mut adc_fifo = adc.build_fifo().set_channel(&mut humidity_pin).start();
     let mut led_pin = pins.gpio25.into_push_pull_output();
     loop {
-        let digital_value: u16 = adc.read(&mut humidity_pin).unwrap();
-        let sensor_volt = adc_reading_to_voltage(digital_value);
-        let humidity = voltage_to_humidity(sensor_volt);
+        if adc_fifo.len() > 0 {
+            let digital_value: u16 = adc_fifo.read();
+            let sensor_volt = adc_reading_to_voltage(digital_value);
+            let humidity = voltage_to_humidity(sensor_volt);
 
-        if humidity < HUMIDITY_THRESH_PERC {
-            led_pin.set_high().unwrap();
-        } else {
-            led_pin.set_low().unwrap();
+            if humidity < HUMIDITY_THRESH_PERC {
+                led_pin.set_high().unwrap();
+            } else {
+                led_pin.set_low().unwrap();
+            }
         }
-
-        // TODO: Maybe this delay can be removed.
-        timer.delay_ms(500);
     }
 }

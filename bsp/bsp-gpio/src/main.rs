@@ -1,73 +1,91 @@
-//! # Pico GPIO In/Out Example
-//!
-//! Toggles the LED based on GPIO input.
-//!
-//! This will control an LED on GP25 based on a button hooked up to GP15. The
-//! button should cause the line to be grounded, as the input pin is pulled high
-//! internally by this example. When the button is pressed, the LED will turn
-//! off.
-//!
-//! See the `Cargo.toml` file for Copyright and license details.
-
 #![no_std]
 #![no_main]
-
-// The macro for our start-up function
-use rp_pico::entry;
-
-// GPIO traits
-use embedded_hal::digital::{InputPin, OutputPin};
 
 // Ensure we halt the program on panic (if we don't mention this crate it won't
 // be linked)
 use panic_halt as _;
 
-// A shorter alias for the Peripheral Access Crate, which provides low-level
-// register access
-use rp_pico::hal::pac;
-
-// A shorter alias for the Hardware Abstraction Layer, which provides
-// higher-level drivers.
 use rp_pico::hal;
 
-/// Entry point to our bare-metal application.
-///
-/// The `#[entry]` macro ensures the Cortex-M start-up code calls this function
-/// as soon as all global variables are initialised.
-///
-/// The function configures the RP2040 peripherals, then just reads the button
-/// and sets the LED appropriately.
+use hal::entry;
+
+// A shorter alias for the Peripheral Access Crate, which provides low-level
+// register access
+use hal::pac;
+
+use embedded_hal::delay::DelayNs;
+use embedded_hal::digital::OutputPin;
+use rp_pico::hal::adc::AdcPin;
+
+use embedded_hal_0_2::adc::OneShot;
+/// External high-speed crystal on the Raspberry Pi Pico board is 12 MHz. Adjust
+/// if your board has a different frequency
+const XTAL_FREQ_HZ: u32 = 12_000_000u32;
+
+fn adc_reading_to_voltage(reading_12bit: u16) -> f32 {
+    const REFERENCE_VOLTAGE: f32 = 3.3;
+    const STEPS_12BIT: u16 = 4096;
+    (f32::from(reading_12bit) / f32::from(STEPS_12BIT)) * REFERENCE_VOLTAGE
+}
+
+const HUMIDITY_THRESH_PERC: f32 = 0.1;
+
+fn voltage_to_humidity(voltage: f32) -> f32 {
+    const AIR_V: f32 = 2.77;
+    const WATER_V: f32 = 1.4;
+    -(voltage - WATER_V) / (AIR_V - WATER_V)
+}
+
 #[entry]
 fn main() -> ! {
     // Grab our singleton objects
     let mut pac = pac::Peripherals::take().unwrap();
 
-    // Note - we don't do any clock set-up in this example. The RP2040 will run
-    // at it's default clock speed.
+    // Set up the watchdog driver - needed by the clock setup code
+    let mut watchdog = hal::Watchdog::new(pac.WATCHDOG);
+
+    // Configure the clocks
+    let clocks = hal::clocks::init_clocks_and_plls(
+        XTAL_FREQ_HZ,
+        pac.XOSC,
+        pac.CLOCKS,
+        pac.PLL_SYS,
+        pac.PLL_USB,
+        &mut pac.RESETS,
+        &mut watchdog,
+    )
+    .unwrap();
+
+    let mut timer = hal::Timer::new(pac.TIMER, &mut pac.RESETS, &clocks);
 
     // The single-cycle I/O block controls our GPIO pins
     let sio = hal::Sio::new(pac.SIO);
 
-    // Set the pins up according to their function on this particular board
-    let pins = rp_pico::Pins::new(
+    // Set the pins to their default state
+    let pins = hal::gpio::Pins::new(
         pac.IO_BANK0,
         pac.PADS_BANK0,
         sio.gpio_bank0,
         &mut pac.RESETS,
     );
 
-    // Our LED output
-    let mut led_pin = pins.led.into_push_pull_output();
+    let mut adc = hal::Adc::new(pac.ADC, &mut pac.RESETS);
 
-    // Our button input
-    let mut button_pin = pins.gpio15.into_pull_up_input();
+    let mut humidity_pin = AdcPin::new(pins.gpio26).unwrap();
 
-    // Run forever, setting the LED according to the button
+    let mut led_pin = pins.gpio25.into_push_pull_output();
     loop {
-        if button_pin.is_low().unwrap() {
+        let digital_value: u16 = adc.read(&mut humidity_pin).unwrap();
+        let sensor_volt = adc_reading_to_voltage(digital_value);
+        let humidity = voltage_to_humidity(sensor_volt);
+
+        if humidity < HUMIDITY_THRESH_PERC {
             led_pin.set_high().unwrap();
         } else {
             led_pin.set_low().unwrap();
         }
+
+        // TODO: Maybe this delay can be removed.
+        timer.delay_ms(500);
     }
 }

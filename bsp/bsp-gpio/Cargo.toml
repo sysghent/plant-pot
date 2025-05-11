@@ -9,3 +9,6 @@ cortex-m-rt = { workspace = true }
 embedded-hal.workspace = true
 panic-halt.workspace = true
 rp-pico.workspace = true
+
+
+embedded_hal_0_2 = { package = "embedded-hal", version = "0.2.0"}

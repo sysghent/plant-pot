@@ -35,6 +35,7 @@ version = "0.1.0"
 dependencies = [
  "cortex-m",
  "cortex-m-rt",
+ "embedded-hal 0.2.7",
  "embedded-hal 1.0.0",
  "panic-halt",
  "rp-pico",

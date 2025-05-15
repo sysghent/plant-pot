@@ -3,11 +3,13 @@
 }:
 pkgs.mkShell {
   buildInputs = with pkgs; [
-    rustup
-    picotool
+    cargo-binutils
     elf2uf2-rs
     nushell
-    cargo-binutils
+    picotool
+    probe-rs
+    rustup
+    tio
   ];
 
   nativeBuildInputs = with pkgs; [

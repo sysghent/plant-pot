@@ -1,4 +1,4 @@
-# Smart plant pot
+# Workshop: make a smart plant pot
 
 _(Notes for a workshop organised by Hugo & Willem in Ghent in June 2025.)_
 

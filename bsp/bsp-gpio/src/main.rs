@@ -16,6 +16,8 @@ use hal::pac;
 use embedded_hal::digital::OutputPin;
 use rp_pico::hal::adc::AdcPin;
 
+const SERIAL_MESSAGE_LEN: usize = 80;
+
 fn adc_reading_to_voltage(reading_12bit: u16) -> f32 {
     const REFERENCE_VOLTAGE: f32 = 3.3;
     const STEPS_12BIT: u16 = u16::pow(2, 12);
@@ -30,9 +32,12 @@ fn voltage_to_humidity(voltage: f32) -> f32 {
     -(voltage - WATER_V) / (AIR_V - WATER_V)
 }
 
+use rp_pico::hal::clocks::ClocksManager;
 use rp_pico::hal::fugit::MicrosDurationU32;
 use rp_pico::hal::multicore::Multicore;
 use rp_pico::hal::multicore::Stack;
+use rp_pico::hal::sio::SioFifo;
+use rp_pico::pac::Peripherals;
 // USB Device support
 use usb_device::{class_prelude::*, prelude::*};
 
@@ -86,7 +91,6 @@ static mut MEASURE_STACK: Stack<4096> = Stack::new();
 
 #[entry]
 fn main() -> ! {
-    // Grab our singleton objects
     let mut pac = pac::Peripherals::take().unwrap();
 
     // Set up the watchdog driver - needed by the clock setup code
@@ -105,8 +109,6 @@ fn main() -> ! {
     .ok()
     .unwrap();
 
-    let timer = hal::Timer::new(pac.TIMER, &mut pac.RESETS, &clocks);
-
     let mut sio = hal::Sio::new(pac.SIO);
     let mut mc = Multicore::new(&mut pac.PSM, &mut pac.PPB, &mut sio.fifo);
 
@@ -114,10 +116,32 @@ fn main() -> ! {
     let cores = mc.cores();
     let measure_core = &mut cores[1];
     #[allow(static_mut_refs)]
-    let _test = measure_core.spawn(unsafe { &mut MEASURE_STACK.mem }, measure_humidity);
+    measure_core
+        .spawn(unsafe { &mut MEASURE_STACK.mem }, measure_humidity)
+        .unwrap();
 
+    let mut queue = sio.fifo;
+
+    output_regularly(
+        clocks,
+        &mut queue,
+        |humidity, message| {
+            message.clear();
+            write!(message, "Humidity: {} %\n\r", humidity).unwrap()
+        },
+        MicrosDurationU32::millis(500),
+    )
+}
+
+pub fn output_regularly(
+    clocks: ClocksManager,
+    queue: &mut SioFifo,
+    f: impl Fn(u32, &mut heapless::String<SERIAL_MESSAGE_LEN>),
+    interval: MicrosDurationU32,
+) -> ! {
+    let mut pac = unsafe { pac::Peripherals::steal() };
+    let timer = hal::Timer::new(pac.TIMER, &mut pac.RESETS, &clocks);
     // Setup of serial connection
-
     let usb_bus = UsbBusAllocator::new(hal::usb::UsbBus::new(
         pac.USBCTRL_REGS,
         pac.USBCTRL_DPRAM,
@@ -139,24 +163,25 @@ fn main() -> ! {
         .device_class(2) // from: https://www.usb.org/defined-class-codes
         .build();
 
-    let mut queue = sio.fifo;
-
-    let mut message: heapless::String<30> = heapless::String::new();
+    let mut message: heapless::String<SERIAL_MESSAGE_LEN> = heapless::String::new();
 
     let mut last_emission = None;
 
+    serial.write("Before loop".as_bytes()).unwrap();
     loop {
         let _ = usb_dev.poll(&mut [&mut serial]);
 
+        serial.write("After loop".as_bytes()).unwrap();
         if last_emission.is_none()
             || last_emission.is_some_and(|last| {
-                timer.get_counter().checked_duration_since(last).unwrap()
-                    > MicrosDurationU32::millis(500u32)
+                timer.get_counter().checked_duration_since(last).unwrap() > interval
             })
         {
             if let Some(humidity) = queue.read() {
                 message.clear();
-                let _ = write!(message, "Humidity: {humidity} %\n\r");
+
+                f(humidity, &mut message);
+                // let _ = write!(message, "Humidity: {humidity} %\n\r");
                 let _ = serial.write(message.as_bytes());
                 last_emission = Some(timer.get_counter());
             }

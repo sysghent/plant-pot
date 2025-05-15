@@ -6,13 +6,15 @@ name = "pot-hal"
 panic = "abort"
 
 [dependencies]
-cortex-m = { version = "0.7.6", default-features = false }
-cortex-m-rt = { version = "0.7.0" }
+cortex-m-rt = { version = "0.7.3" }
 embedded-hal = { version = "1.0.0" }
 heapless = "0.8.0"
 panic-halt = { version = "1.0.0" }
-rp-pico = "0.9.0"
-
-rp2040-hal = { version = "0.10.2", features = ["critical-section-impl"] }
+rp2040-boot2 = { version = "0.3.0" }
+rp2040-hal = { version = "0.10.0", features = [
+    "critical-section-impl",
+    "rom-func-cache",
+    "rt",
+] }
 usb-device = "0.3.2"
 usbd-serial = "0.2.2"

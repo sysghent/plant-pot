@@ -3,13 +3,19 @@
 
 // Ensure we halt the program on panic (if we don't mention this crate it won't
 // be linked)
+
+use rp2040_hal as hal;
 use embedded_hal::digital::OutputPin;
 use hal::entry;
 // A shorter alias for the Peripheral Access Crate, which provides low-level
 // register access
 use hal::pac;
 use panic_halt as _;
-use rp_pico::{hal, hal::adc::AdcPin};
+use hal::adc::AdcPin;
+
+#[unsafe(link_section = ".boot2")]
+#[used]
+pub static BOOT2: [u8; 256] = rp2040_boot2::BOOT_LOADER_GENERIC_03H;
 
 fn adc_reading_to_voltage(reading_12bit: u16) -> f32 {
     const REFERENCE_VOLTAGE: f32 = 3.3;
@@ -28,7 +34,7 @@ fn voltage_to_humidity(voltage: f32) -> f32 {
 // Used to demonstrate writing formatted strings
 use core::fmt::Write;
 
-use rp_pico::hal::{
+use hal::{
     fugit::MicrosDurationU32,
     multicore::{Multicore, Stack},
 };
@@ -79,6 +85,8 @@ fn measure_humidity() {
 
 static mut MEASURE_STACK: Stack<4096> = Stack::new();
 
+const XOSC_CRYSTAL_FREQ: u32 = 12_000_000;
+
 #[entry]
 fn main() -> ! {
     // Grab our singleton objects
@@ -89,7 +97,7 @@ fn main() -> ! {
 
     // Configure the clocks
     let clocks = hal::clocks::init_clocks_and_plls(
-        rp_pico::XOSC_CRYSTAL_FREQ,
+        XOSC_CRYSTAL_FREQ,
         pac.XOSC,
         pac.CLOCKS,
         pac.PLL_SYS,

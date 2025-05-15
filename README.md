@@ -1,6 +1,6 @@
 # Workshop: make a smart plant pot
 
-_(Notes for a workshop organised by Hugo & Willem in Ghent in June 2025.)_
+_(Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025.)_
 
 In this workshop you will learn how to create a plant pot that can automatically add water to itself when the humidity is too dry.
 
@@ -16,11 +16,8 @@ You can buy components at the end for a small fee.
 
 Please bring a plant in a pot (or use a glass of water). 
 
-## Raspberry Pico
 
-Datasheet: https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf
-
-## Install toolchain for Pico
+## Install toolchain for Pico (and other ARM Cortex-M CPUs)
 
 Install the Rust compiler components
 
@@ -30,50 +27,53 @@ rustup component add rust-analyzer
 rustup target add thumbv6m-none-eabi
 ```
 
-Setup the linker configuration in `.cargo/Config.toml`. It is important to have a `memory.x` file in the root for linking.
 
 
 ## Levels of abstraction
 
-From low to high.
+Writing programs for microcontrollers can be done at different levels of abstraction.
 
-Processor: 
-- cortex-m https://crates.io/crates/cortex-m
+### Low level
 
-Peripheral access crate (low level):
-- https://crates.io/crates/rp2040-pac (generated from svd-files)
+Not used directly in this project.
+
+MCU = Drivers for the pocessor core(s): 
+- Pico: https://crates.io/crates/cortex-m
+
+PAC = Peripheral access crate  (usually generated from svd-files)
+- Pico: https://crates.io/crates/rp2040-pac
+
+### High level
+
+HAL = Hardware access layer: 
+- Pico: https://crates.io/crates/rp2040-hal/0.10.2 (example in [hal](./hal))
 
 
-Hardware access layer (medium level): 
-- https://crates.io/crates/rp2040-hal/0.10.2
-- embassy-rp https://crates.io/crates/embassy-rp
+BSP = Board support packages:
+- Pico: https://crates.io/crates/rp-pico (example in [bsp](./bsp))
 
-Board support packages (high level):
--  https://crates.io/crates/rp-pico (actually not that high-level), examples copied in this repo
 
-## Templates
+EMBASSY = Asynchronous HAL / BSP (high level, example in [embassy](./embassy)):
+- Pico: https://crates.io/crates/embassy-rp
 
-You can get started using one of the templates in this repository.
 
 ## Build
 
-Build with:
+Verify that the right compiler options are set in `.cargo/config.toml` (a `memory.x` file is needed), then build with:
 
 ```bash
-cargo build -p package-name
+cargo build 
 ```
 
-If you want to be explicit:
+This will produce an ELF binary (without extension) under `target/thumbv6m-none-eabi/debug`.
 
-```bash
-cargo build --target thumbv6m-none-eabi -p package
-```
+## Special steps for Pico
 
-This will produce an ELF binary (without extension) under [target/thumbv6m-none-eabi/debug](./target/thumbv6m-none-eabidy).
+Datasheet: https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf
 
-## Mounting the Pico
+### Mounting the Pico
 
-Steps:
+Steps for Pico without "Raspberry Pi hardware debug probe":
 
 1. Unplug the Pico.
 2. Hold the "BOOTSEL" button on the pico.
@@ -82,7 +82,7 @@ Steps:
 5. Mount the storage device (if necesssary).
 
 
-## Modifying binary
+### Patching binary for Pico
 
 If you have already played around with Raspberry Pico, you might have `picotool` installed already. This tool can be used to prepare the Rust ELF binary for flashing.
 
@@ -93,14 +93,8 @@ If you haven't, you can  install the `elf2uf2-rs` tool. This tool will also conv
 cargo install elf2uf2-rs
 ```
 
-## Flashing
+### Flashing Pico
 
-If you prefer a manual approach, use the target `thumbv6m-none-eabi` and runner `elf2uf2-rs` as specified in the `.cargo/config.toml` file.
-
-```bash
-elf2uf2-rs -d target/thumbv6m-none-eabi/debug/embassy
-```
-If you don't want to type that much, you can use the same `.cargo/config.toml` file as we do (with a pre-configured runner):
 
 ```bash
 cargo run

@@ -6,9 +6,10 @@ version = "0.1.0"
 [dependencies]
 cortex-m = { workspace = true }
 cortex-m-rt = { workspace = true }
-embedded-hal.workspace = true
 panic-halt.workspace = true
 rp-pico.workspace = true
+embedded-hal.workspace = true
+heapless = "0.8.0"
 
-
-embedded_hal_0_2 = { package = "embedded-hal", version = "0.2.0"}
+usb-device = "0.3.2"
+usbd-serial = "0.2.2"

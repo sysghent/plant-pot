@@ -4,15 +4,15 @@
 // Ensure we halt the program on panic (if we don't mention this crate it won't
 // be linked)
 
-use rp2040_hal as hal;
 use embedded_hal::digital::OutputPin;
-use hal::entry;
 // A shorter alias for the Peripheral Access Crate, which provides low-level
 // register access
 use hal::pac;
+use hal::{adc::AdcPin, entry};
 use panic_halt as _;
-use hal::adc::AdcPin;
+use rp2040_hal as hal;
 
+// Important when spawning a second task
 #[unsafe(link_section = ".boot2")]
 #[used]
 pub static BOOT2: [u8; 256] = rp2040_boot2::BOOT_LOADER_GENERIC_03H;

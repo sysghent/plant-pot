@@ -1,11 +1,7 @@
-//! This example shows how async gpio can be used with a RP2040.
-//!
-//! The LED on the RP Pico W board is connected differently. See wifi_blinky.rs.
 
 #![no_std]
 #![no_main]
 
-// use static_cell::StaticCell;
 use async_plant::{
     Irqs, idle,
     monitor_output::{toggle_led, usb_task},

@@ -5,10 +5,9 @@ use embassy_rp::adc::{Adc, Async, Channel};
 use embassy_time::{Duration, Ticker};
 use embassy_usb::class::cdc_acm::CdcAcmClass;
 use heapless::String;
+use num_traits::float::FloatCore;
 
-use crate::HUMIDITY_PUBSUB_CHANNEL;
-// use static_cell::StaticCell;
-use crate::usb::StaticUsbDriver;
+use crate::{HUMIDITY_PUBSUB_CHANNEL, usb::StaticUsbDriver};
 
 fn adc_reading_to_voltage(reading_12bit: u16) -> f32 {
     const REFERENCE_VOLTAGE: f32 = 3.3;
@@ -49,7 +48,12 @@ pub async fn send_humidity(mut class: CdcAcmClass<'static, StaticUsbDriver>) {
         let humidity = subscriber.next_message_pure().await;
         debug!("Received humidity");
         string.clear();
-        write!(&mut string, "Humidity: {:.2} %\r\n", humidity).unwrap();
+        write!(
+            &mut string,
+            "Humidity: {} %\r\n",
+            (humidity * 100.0).floor()
+        )
+        .unwrap();
         debug!("Sending humidity over USB: {}", string.as_str());
         class.write_packet(string.as_bytes()).await.unwrap();
     }

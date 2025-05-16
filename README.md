@@ -16,8 +16,20 @@ You can buy components at the end for a small fee.
 
 Please bring a plant in a pot (or use a glass of water). 
 
+## Device specifications
 
-## Install toolchain for Pico (and other ARM Cortex-M CPUs)
+Pico: https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf
+
+
+## Install tools for Pico (and other ARM Cortex-M CPUs)
+
+On NixOS, you can start a shell with the necessary dependencies with:
+
+```bash
+nix-shell
+```
+
+For using `probe-rs`, you need to add udev rules.
 
 Install the Rust compiler components
 
@@ -26,8 +38,6 @@ rustup install stable-x86_64-unknown-linux-gnu
 rustup component add rust-analyzer
 rustup target add thumbv6m-none-eabi
 ```
-
-
 
 ## Levels of abstraction
 
@@ -67,9 +77,11 @@ cargo build
 
 This will produce an ELF binary (without extension) under `target/thumbv6m-none-eabi/debug`.
 
-## Special steps for Pico
+## Flashing Pico without hardware debug probe
 
-Datasheet: https://datasheets.raspberrypi.com/pico/pico-datasheet.pdf
+If you don't have an extra hardware debug probe, you can still flash the Pico using the following steps.
+
+
 
 ### Mounting the Pico
 
@@ -95,13 +107,15 @@ cargo install elf2uf2-rs
 
 ### Flashing Pico
 
+If your `.cargo/config.toml` file is set up correctly, you can use the following command to compile and flash the Pico in one step:
+
 
 ```bash
 cargo run
 ```
 
 
-## Further optimisations
+## Optimisation
 
 Tools to analyse binary:
 

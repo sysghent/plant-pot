@@ -3,6 +3,10 @@ edition = "2024"
 name = "async-plant"
 version = "0.1.0"
 
+[profile.dev]
+opt-level = 0
+
+
 [dependencies]
 cortex-m = { version = "0.7.6", features = [
     "inline-asm",
@@ -38,6 +42,8 @@ defmt = "1.0.1"
 defmt-rtt = "1.0.0"
 embedded-hal-async = "1.0"
 heapless = "0.8.0"
+libm = "0.2.15"
+num-traits = { version = "0.2.19", default-features = false }
 panic-probe = { version = "0.3", features = ["print-defmt"] }
 portable-atomic = { version = "1.5", features = ["critical-section"] }
 static_cell = { version = "2.1.0" }

@@ -7,7 +7,7 @@
 
 // use static_cell::StaticCell;
 use async_plant::{
-    Irqs,
+    Irqs, idle,
     monitor_output::{toggle_led, usb_task},
     sensing::{measure_humidity, send_humidity},
     usb::UsbSetup,
@@ -49,6 +49,7 @@ fn main() -> ! {
                 debug!("Spawning async tasks on core 1");
                 spawner.spawn(measure_humidity(adc, p26)).unwrap();
                 spawner.spawn(toggle_led(led)).unwrap();
+                spawner.spawn(idle()).unwrap();
             });
         },
     );
@@ -64,5 +65,6 @@ fn main() -> ! {
         debug!("Spawning async tasks on core 0");
         spawner.spawn(usb_task(usb_runtime)).unwrap();
         spawner.spawn(send_humidity(usb_io_handle)).unwrap();
+        spawner.spawn(idle()).unwrap();
     });
 }

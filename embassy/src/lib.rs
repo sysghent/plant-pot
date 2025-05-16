@@ -16,3 +16,10 @@ bind_interrupts!(
 
 static HUMIDITY_PUBSUB_CHANNEL: PubSubChannel<CriticalSectionRawMutex, f32, 1, 2, 1> =
     PubSubChannel::new();
+
+#[embassy_executor::task]
+pub async fn idle() {
+    loop {
+        embassy_futures::yield_now().await;
+    }
+}

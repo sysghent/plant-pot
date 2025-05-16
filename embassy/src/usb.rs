@@ -25,9 +25,9 @@ impl UsbSetup {
         // Create embassy-usb Config
         let config = {
             let mut config: embassy_usb::Config<'static> = embassy_usb::Config::new(0xc0de, 0xcafe);
-            config.manufacturer = Some("Embassy");
-            config.product = Some("USB-serial example");
-            config.serial_number = Some("12345678");
+            config.manufacturer = Some("Raspberry");
+            config.product = Some("Pi Pico (flashed with Embassy)");
+            config.serial_number = Some("00000000");
             config.max_power = 100;
             config.max_packet_size_0 = 64;
             config

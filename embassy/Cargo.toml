@@ -4,8 +4,8 @@ name = "async-plant"
 version = "0.1.0"
 
 [profile.dev]
+debug = 2
 opt-level = 0
-
 
 [dependencies]
 cortex-m = { version = "0.7.6", features = [

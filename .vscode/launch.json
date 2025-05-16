@@ -5,9 +5,8 @@
             "type": "probe-rs-debug",
             "request": "launch",
             "name": "Launch async plant pot",
-            "cwd": "${workspaceFolder}",
-            "speed": 4000,
             "chip": "rp2040",
+            "cwd": "${workspaceFolder}",
             "runtimeExecutable": "probe-rs",
             "runtimeArgs": [
                 "dap-server"
@@ -18,8 +17,7 @@
             },
             "coreConfigs": [
                 {
-                    "coreIndex": 0,
-                    "programBinary": "${workspaceFolder}/embassy/target/thumbv6m-none-eabi/debug/embassy",
+                    "programBinary": "${workspaceFolder}/embassy/target/thumbv6m-none-eabi/debug/async-plant",
                     "rttEnabled": true,
                     "rttChannelFormats": [
                         {
@@ -37,12 +35,6 @@
                     ]
                 }
             ],
-            "env": {
-                // If you set this variable, check the VSCode console log window for the location of the log file.
-                "RUST_LOG": "info"
-            },
-            "consoleLogLevel": "Info",
-            "wireProtocol": "Swd"
         },
     ]
 }

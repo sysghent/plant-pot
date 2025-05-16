@@ -8,7 +8,6 @@ pkgs.mkShell {
     elf2uf2-rs # If your device uses UF2 files for flashing.
     nushell
     picotool # In case you want to use offical Raspberry Pi tools
-    probe-rs-tools # For breakpoints in VS Code you need version 0.28.0 or higher
     rustup
     tio # For reading serial output
     openocd

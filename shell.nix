@@ -7,9 +7,11 @@ pkgs.mkShell {
     elf2uf2-rs
     nushell
     picotool
-    probe-rs
+    probe-rs-tools
     rustup
     tio
+    openocd
+    gdb
   ];
 
   nativeBuildInputs = with pkgs; [

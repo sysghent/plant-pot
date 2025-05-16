@@ -19,19 +19,25 @@ embassy-executor = { version = "0.7.0", features = [
     "executor-thread",
 ] } # Choose an executor mode
 embassy-futures = { version = "0.1.1" }
-embassy-rp = { version = "0.4.0", default-features = false, features = [
+embassy-rp = { version = "0.4.0", features = [
     "critical-section-impl",
+    "defmt",
     "rp2040",
     "time-driver",
     "unstable-pac",
 ] }
 embassy-sync = { version = "0.6.2", features = ["defmt"] }
-embassy-time = { version = "0.4.0" } # Configure timer tick rate
-embassy-usb = { version = "0.4.0" }
+embassy-time = { version = "0.4.0", features = [
+    "defmt",
+    "defmt-timestamp-uptime",
+] } # Configure timer tick rate
+embassy-usb = { version = "0.4.0", features = ["defmt"] }
 
 critical-section = "1.2.0"
 defmt = "1.0.1"
 embedded-hal-async = "1.0"
 heapless = "0.8.0"
+panic-probe = { version = "0.3", features = ["print-defmt"] }
 portable-atomic = { version = "1.5", features = ["critical-section"] }
 static_cell = { version = "2.1.0" }
+defmt-rtt = "1.0.0"

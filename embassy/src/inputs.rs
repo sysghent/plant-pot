@@ -1,13 +1,8 @@
-use core::fmt::Write;
-
 use defmt::debug;
 use embassy_rp::adc::{Adc, Async, Channel};
 use embassy_time::{Duration, Ticker};
-use embassy_usb::class::cdc_acm::CdcAcmClass;
-use heapless::String;
-use num_traits::float::FloatCore;
 
-use crate::{HUMIDITY_PUBSUB_CHANNEL, usb::StaticUsbDriver};
+use crate::HUMIDITY_PUBSUB_CHANNEL;
 
 fn adc_reading_to_voltage(reading_12bit: u16) -> f32 {
     const REFERENCE_VOLTAGE: f32 = 3.3;
@@ -36,25 +31,5 @@ pub async fn measure_humidity(mut adc: Adc<'static, Async>, mut humidity_pin: Ch
         debug!("Humidity: {}", humidity);
         publisher.publish_immediate(humidity);
         debug!("Humidity published on internal channel");
-    }
-}
-
-#[embassy_executor::task]
-pub async fn send_humidity(mut class: CdcAcmClass<'static, StaticUsbDriver>) {
-    let mut string = String::<64>::new();
-    let mut subscriber = HUMIDITY_PUBSUB_CHANNEL.subscriber().unwrap();
-
-    loop {
-        let humidity = subscriber.next_message_pure().await;
-        debug!("Received humidity");
-        string.clear();
-        write!(
-            &mut string,
-            "Humidity: {} %\r\n",
-            (humidity * 100.0).floor()
-        )
-        .unwrap();
-        debug!("Sending humidity over USB: {}", string.as_str());
-        class.write_packet(string.as_bytes()).await.unwrap();
     }
 }

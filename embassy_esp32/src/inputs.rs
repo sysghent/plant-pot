@@ -20,8 +20,7 @@ fn voltage_to_humidity(voltage: f32) -> f32 {
     1.0 - (voltage - WATER_V) / (AIR_V - WATER_V)
 }
 
-#[embassy_executor::task]
-pub async fn measure_humidity(adc_peripheral: ADC1, analogue_humidity_pin: GpioPin<0>) {
+pub async fn measure_humidity(adc_peripheral: ADC1, analogue_humidity_pin: GpioPin<0>) -> ! {
     let mut adc_config = AdcConfig::default();
 
     let mut adc_ready_pin = adc_config.enable_pin(

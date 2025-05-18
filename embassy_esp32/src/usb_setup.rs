@@ -22,7 +22,7 @@ impl UsbJtagSetup {
         Self { rx, tx }
     }
 
-    pub fn spawn(self, spawner: Spawner) {
+    pub fn start_usb_comm(self, spawner: Spawner) {
         let UsbJtagSetup { rx, tx } = self;
         spawner.spawn(reader(rx)).unwrap();
         spawner.spawn(writer(tx)).unwrap();

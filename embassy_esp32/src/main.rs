@@ -22,10 +22,9 @@ async fn main(spawner: Spawner) -> ! {
 
     let on_board_led = Output::new(p.GPIO2, Level::Low);
 
-    spawner.spawn(measure_humidity(p.ADC1, p.GPIO0)).unwrap();
     spawner.spawn(toggle_led(on_board_led)).unwrap();
 
-    UsbJtagSetup::new(p.USB_DEVICE).spawn(spawner);
+    UsbJtagSetup::new(p.USB_DEVICE).start_usb_comm(spawner);
 
-    loop {}
+    measure_humidity(p.ADC1, p.GPIO0).await
 }

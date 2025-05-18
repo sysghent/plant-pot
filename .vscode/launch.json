@@ -36,5 +36,40 @@
                 }
             ],
         },
+        {
+            "type": "probe-rs-debug",
+            "request": "launch",
+            "name": "Launch wifi plant pot",
+            "chip": "esp32c6",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "probe-rs",
+            "runtimeArgs": [
+                "dap-server"
+            ],
+            "flashingConfig": {
+                "flashingEnabled": true,
+                "haltAfterReset": true
+            },
+            "coreConfigs": [
+                {
+                    "programBinary": "${workspaceFolder}/embassy_esp32/target/riscv32imac-unknown-none-elf/debug/esp32-async-plant",
+                    "rttEnabled": true,
+                    "rttChannelFormats": [
+                        {
+                            "channelNumber": 0,
+                            // Format RTT data as String data
+                            "dataFormat": "String",
+                            // Include host-side timestamps for every line of data transferred from the target RTT output
+                            "showTimestamps": true
+                        },
+                        {
+                            "channelNumber": 1,
+                            // Treat data as raw binary data, and do not format in any way
+                            "dataFormat": "BinaryLE"
+                        }
+                    ]
+                }
+            ],
+        },
     ]
 }

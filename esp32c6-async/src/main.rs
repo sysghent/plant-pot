@@ -21,9 +21,6 @@ async fn main(spawner: Spawner) -> ! {
     let p = esp_hal::init(config);
 
     info!("Initializing timer");
-    // let timer_unit = TimerGroup::new(p.TIMG0);
-
-    // let timer = timer_unit.timer0;
 
     let systimer = SystemTimer::new(p.SYSTIMER);
     esp_hal_embassy::init(systimer.alarm0);

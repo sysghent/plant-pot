@@ -1,3 +1,4 @@
-# Plant pot - BSP - high level
+# Pico: BSP edition
 
-Mainly uses the `rp-pico` crate to provide a high level interface to the hardware.
+Uses the API `rp-pico` for a slightly higher level interface to the Pico, compared to the low/mid-level HAL version.
+

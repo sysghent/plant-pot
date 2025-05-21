@@ -3,48 +3,21 @@ edition = "2024"
 name = "esp32c6-async"
 version = "0.1.0"
 
-# [profile.dev]
-# debug = 2
-# opt-level = 0
+[profile.dev]
+debug = 2
+opt-level = 0
 
 [dependencies]
-
-embedded-hal = "1.0.0"
-panic-halt = "1.0.0"
-
-embassy-embedded-hal = { version = "0.3.0" }
-embassy-executor = { version = "0.7.0", features = [
-
-    "task-arena-size-131072",
-    "executor-interrupt",
-    "executor-thread",
-] } # Choose an executor mode
-embassy-futures = { version = "0.1.1" }
-
-embassy-sync = { version = "0.6.2", features = ["defmt"] }
-embassy-time = { version = "0.4.0", features = [
-    "defmt",
-    "defmt-timestamp-uptime",
-] } # Configure timer tick rate
-embassy-usb = { version = "0.4.0", features = ["defmt"] }
-
 critical-section = "1.2.0"
 defmt = "1.0.1"
 defmt-rtt = "1.0.0"
-embedded-hal-async = "1.0"
-esp-hal = { version = "0.23.1", features = ["defmt", "esp32c6", "unstable"] }
-esp-hal-embassy = { version = "0.6.0", features = ["defmt", "esp32c6"] }
-heapless = "0.8.0"
-libm = "0.2.15"
-num-traits = { version = "0.2.19", default-features = false }
-# panic-probe = { version = "0.3", features = ["print-defmt"] }
-embedded-io-async = "0.6.1"
-# esp-embassy-wifihelper = { version = "0.2.3", features = ["esp32c6"] }
-esp-println = { version = "0.13.1", features = ["esp32c6"] }
-esp-wifi = { version = "0.12.0", features = ["defmt", "esp32c6", "wifi"] }
-portable-atomic = { version = "1.5", features = ["critical-section"] }
-reqwless = { version = "0.13.0", default-features = false }
-
+embassy-embedded-hal = { version = "0.3.0" }
+embassy-executor = { version = "0.7.0", features = [
+    "task-arena-size-131072",
+    "executor-interrupt",
+    "executor-thread",
+] }
+embassy-futures = { version = "0.1.1" }
 embassy-net = { version = "0.7.0", features = [
     "proto-ipv4",
     "dns",
@@ -52,6 +25,25 @@ embassy-net = { version = "0.7.0", features = [
     "medium-ip",
     "dhcpv4",
 ] }
+embassy-sync = { version = "0.6.2", features = ["defmt"] }
+embassy-time = { version = "0.4.0", features = [
+    "defmt",
+    "defmt-timestamp-uptime",
+] }
+embassy-usb = { version = "0.4.0", features = ["defmt"] }
+embedded-hal = "1.0.0"
+embedded-hal-async = "1.0"
+embedded-io-async = "0.6.1"
 esp-alloc = "0.6.0"
 esp-backtrace = { version = "0.15.1", features = ["esp32c6", "defmt"] }
+esp-hal = { version = "0.23.1", features = ["defmt", "esp32c6", "unstable"] }
+esp-hal-embassy = { version = "0.6.0", features = ["defmt", "esp32c6"] }
+esp-println = { version = "0.13.1", features = ["esp32c6"] }
+esp-wifi = { version = "0.12.0", features = ["defmt", "esp32c6", "wifi"] }
+heapless = "0.8.0"
+libm = "0.2.15"
+num-traits = { version = "0.2.19", default-features = false }
+panic-halt = "1.0.0"
+portable-atomic = { version = "1.5", features = ["critical-section"] }
+reqwless = { version = "0.13.0", default-features = false }
 static_cell = { version = "2.1.0" }

@@ -1,4 +1,4 @@
-# Plant pot: HAL - medium level
+# Pico-H: HAL edition
 
 This repository contains a setup for the Raspberry Pico that allows to communicate with it over USB and a serial interface.
 

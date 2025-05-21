@@ -1,14 +1,3 @@
-#
-# Cargo Configuration for the https://github.com/rp-rs/rp-hal.git repository.
-#
-# Copyright (c) The RP-RS Developers, 2021
-#
-# You might want to make a similar file in your own repository if you are
-# writing programs for Raspberry Silicon microcontrollers.
-#
-# This file is MIT or Apache-2.0 as per the repository README.md file
-#
-
 
 [build]
 # Set the default target to match the Cortex-M0+ in the RP2040
@@ -27,21 +16,13 @@ target = "thumbv6m-none-eabi"
 # * no-vectorize-loops turns off the loop vectorizer (seeing as the M0+ doesn't
 #   have SIMD)
 rustflags = [
-    "-C",
-    "link-arg=-Tdefmt.x", # defmt for logging
+
     "-C",
     "no-vectorize-loops",
+    "-C",
+    "link-arg=-Tdefmt.x", # defmt for logging
 ]
 
 # This runner will make a UF2 file and then copy it to a mounted RP2040 in USB
-# Bootloader mode:
-# runner = "elf2uf2-rs -d"
 
-# This runner will find a supported SWD debug probe and flash your RP2040 over
-# SWD:
-[target.'cfg(all(target_arch = "arm", target_os = "none"))']
-runner = "probe-rs run --chip RP2040"
-
-
-[env]
-DEFMT_LOG = "debug"
+runner = "elf2uf2-rs -d"

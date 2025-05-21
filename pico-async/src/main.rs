@@ -1,12 +1,6 @@
 #![no_std]
 #![no_main]
 
-use async_plant::{
-    Irqs,
-    inputs::measure_humidity,
-    outputs::{send_humidity_usb, toggle_led},
-    usb_setup::{UsbSetup, usb_task},
-};
 use defmt::{debug, info};
 use defmt_rtt as _;
 use embassy_executor::Executor;
@@ -16,6 +10,12 @@ use embassy_rp::{
     multicore::{Stack, spawn_core1},
 };
 use panic_probe as _;
+use pico_async::{
+    Irqs,
+    inputs::measure_humidity,
+    outputs::{send_humidity_usb, toggle_led},
+    usb_setup::{UsbSetup, usb_task},
+};
 use static_cell::StaticCell;
 
 static USB_EXECUTOR: StaticCell<Executor> = StaticCell::new();

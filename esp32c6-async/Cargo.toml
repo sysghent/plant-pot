@@ -1,6 +1,6 @@
 [package]
 edition = "2024"
-name = "esp32-async-plant"
+name = "esp32c6-async"
 version = "0.1.0"
 
 # [profile.dev]

@@ -9,7 +9,7 @@ use esp_hal::{
     gpio::{Level, Output},
     timer::systimer::SystemTimer,
 };
-use esp32_async_plant::{
+use esp32c6_async::{
     inputs::measure_humidity, net::notify, outputs::toggle_led, usb_setup::UsbJtagSetup,
     wifi::setup_wifi_dhcp_client,
 };

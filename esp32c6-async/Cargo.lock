@@ -760,38 +760,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "esp32-async-plant"
-version = "0.1.0"
-dependencies = [
- "critical-section",
- "defmt 1.0.1",
- "defmt-rtt",
- "embassy-embedded-hal",
- "embassy-executor",
- "embassy-futures",
- "embassy-net",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "embedded-hal 1.0.0",
- "embedded-hal-async",
- "embedded-io-async",
- "esp-alloc",
- "esp-backtrace",
- "esp-hal",
- "esp-hal-embassy",
- "esp-println",
- "esp-wifi",
- "heapless",
- "libm",
- "num-traits",
- "panic-halt",
- "portable-atomic",
- "reqwless",
- "static_cell",
-]
-
-[[package]]
 name = "esp32c2"
 version = "0.24.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -822,6 +790,38 @@ dependencies = [
  "critical-section",
  "defmt 0.3.100",
  "vcell",
+]
+
+[[package]]
+name = "esp32c6-async"
+version = "0.1.0"
+dependencies = [
+ "critical-section",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-embedded-hal",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "embedded-hal 1.0.0",
+ "embedded-hal-async",
+ "embedded-io-async",
+ "esp-alloc",
+ "esp-backtrace",
+ "esp-hal",
+ "esp-hal-embassy",
+ "esp-println",
+ "esp-wifi",
+ "heapless",
+ "libm",
+ "num-traits",
+ "panic-halt",
+ "portable-atomic",
+ "reqwless",
+ "static_cell",
 ]
 
 [[package]]

@@ -40,5 +40,7 @@ You can buy the hardware from us at the end of the workshop.
 
 To start with:
 
-- [Hardware](./HARDWARE.md)
-- [Software](./SOFTWARE_DEV.md)
+- [Hardware](./docs/HARDWARE.md)
+- [Tutorial](./tutorial/README.md)
+
+

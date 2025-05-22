@@ -31,9 +31,15 @@ _**Remark**: If you want more automatic scheduling, you need to use a different 
 
 The Embassy project provides a plugin that allows to use the specific hardware of a Raspberry Pi Pico through safe abstractions: <https://crates.io/crates/embassy-rp>.
 
-## Start the first exercise
+## Follow exercises
 
-Go to the first step in [01_build](./01_build/README.md)
+The basic, required dependencies are already listed in the top-level (workspace-level) `Cargo.toml` file.
+
+For solving the exercises, you might need to add additional dependencies.
+
+Examples can be found in the `examples` folder of the Embassy project: <https://github.com/embassy-rs/embassy/tree/main/examples/rp235x/src/bin>.
+
+- [01](./01/README.md)
 
 ## Launching a debug session
 

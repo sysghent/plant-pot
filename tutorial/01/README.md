@@ -1,4 +1,4 @@
-# Step 1 - Build
+# Step 1 - Blink
 
 ## Build / cross-compile
 
@@ -19,10 +19,8 @@ See:
 - [FLASH_PICO_UF2.md](FLASH_PICO_UF2.md) for flashing the Pico without a debug probe.
 - [DEBUG_PROBE_USAGE.md](DEBUG_PROBE_USAGE.md) for flashing with a debug probe.
 
-## Common initialisation steps
+## Initializing the board
 
-The basic, required dependencies are already listed in the top-level (workspace-level) `Cargo.toml` file.
+Create peripherals.
 
-For solving the exercises, you might need to add additional dependencies.
-
-Examples can be found in the `examples` folder of the Embassy project: <https://github.com/embassy-rs/embassy/tree/main/examples/rp235x/src/bin>.
+**Task**: turn on the onboard LED (and loop forever).

@@ -1,5 +1,12 @@
 #![no_std]
 
+pub mod control;
+pub mod http_notify;
+pub mod inputs;
+pub mod outputs;
+pub mod usb_setup;
+pub mod wifi;
+
 use defmt_rtt as _;
 use embassy_rp::{
     bind_interrupts,
@@ -8,12 +15,7 @@ use embassy_rp::{
 };
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
 use panic_probe as _;
-pub mod control;
-pub mod http_notify;
-pub mod inputs;
-pub mod outputs;
-pub mod usb_setup;
-pub mod wifi;
+
 bind_interrupts!(
     pub struct Irqs {
         ADC_IRQ_FIFO => embassy_rp::adc::InterruptHandler;

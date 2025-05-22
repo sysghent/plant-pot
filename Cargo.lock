@@ -1549,6 +1549,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "step-1"
+version = "0.0.1"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "string_cache"
 version = "0.8.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"

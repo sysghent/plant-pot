@@ -12,7 +12,6 @@ use embassy_rp::{
     gpio::{Level, Output, Pull},
     multicore::{Stack, spawn_core1},
 };
-use panic_probe as _;
 use solution::{
     Irqs,
     control::run_water_pump,

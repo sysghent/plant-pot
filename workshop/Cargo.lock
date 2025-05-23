@@ -118,20 +118,11 @@ name = "blink-light-timers"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -184,11 +175,9 @@ name = "calibrate-humidity-sensor"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
  "embassy-sync",
  "embassy-time",
@@ -196,7 +185,6 @@ dependencies = [
  "heapless",
  "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -949,21 +937,15 @@ name = "hysteresis-motor"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
  "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1088,9 +1070,7 @@ dependencies = [
  "embassy-rp",
  "embassy-sync",
  "embassy-time",
- "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
  "reqwless",
  "static_cell",
@@ -1193,11 +1173,9 @@ name = "parallel-tasks"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
  "embassy-sync",
  "embassy-time",
@@ -1205,7 +1183,6 @@ dependencies = [
  "heapless",
  "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1405,20 +1382,12 @@ name = "read-humidity-adc"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -1582,19 +1551,13 @@ name = "serial-input"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1603,19 +1566,13 @@ name = "serial-print-debug"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1634,11 +1591,7 @@ dependencies = [
  "embassy-rp",
  "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1811,21 +1764,15 @@ name = "tune-duration-motor-pid"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
  "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1834,21 +1781,15 @@ name = "tune-speed-motor-pwm"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
  "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1965,19 +1906,13 @@ name = "water-pump"
 version = "0.1.0"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 

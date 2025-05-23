@@ -20,5 +20,4 @@ bind_interrupts!(
     }
 );
 
-static HUMIDITY_PUBSUB_CHANNEL: PubSubChannel<CriticalSectionRawMutex, f32, 1, 3, 1> =
-    PubSubChannel::new();
+static PUBSUB_CHANNEL: PubSubChannel<CriticalSectionRawMutex, f32, 1, 1, 1> = PubSubChannel::new();

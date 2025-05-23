@@ -3,7 +3,7 @@
 pub mod inputs;
 pub mod outputs;
 pub mod usb_setup;
-
+use defmt_rtt as _;
 use embassy_rp::{
     bind_interrupts,
     peripherals::{PIO0, USB},

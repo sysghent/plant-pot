@@ -1,6 +1,6 @@
-use embassy_rp::{gpio::Output, pwm::PwmOutput};
+use embassy_rp::gpio::Output;
 
-use crate::HUMIDITY_PUBSUB_CHANNEL;
+use crate::PUBSUB_CHANNEL;
 
 const TARGET_HUMIDITY: f32 = 0.3;
 
@@ -22,9 +22,9 @@ impl Hysteresis {
 }
 
 #[embassy_executor::task]
-pub async fn run_water_pump(mut pump: Output<'static>, mut pwm: PwmOutput<'static>) {
+pub async fn run_water_pump(mut pump: Output<'static>) {
     let mut config: Hysteresis = unimplemented!();
-    let mut humidity_receiver = HUMIDITY_PUBSUB_CHANNEL.subscriber().unwrap();
+    let mut humidity_receiver = PUBSUB_CHANNEL.subscriber().unwrap();
 
     loop {
         let _humidity = humidity_receiver.next_message_pure().await;

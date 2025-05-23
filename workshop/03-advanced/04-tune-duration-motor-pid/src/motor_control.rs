@@ -1,4 +1,4 @@
-use embassy_rp::{gpio::Output, pwm::PwmOutput};
+use embassy_rp::gpio::Output;
 
 use crate::HUMIDITY_PUBSUB_CHANNEL;
 

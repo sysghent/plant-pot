@@ -1,13 +1,10 @@
-use core::fmt::Write;
-
-use defmt::{debug, trace};
-use embassy_rp::{gpio::Output, peripherals::USB, usb::Driver};
+use defmt::debug;
+use embassy_rp::{peripherals::USB, usb::Driver};
 use embassy_usb::{
     UsbDevice,
     class::cdc_acm::{CdcAcmClass, State},
 };
 use heapless::String;
-use num_traits::float::FloatCore;
 use panic_probe as _;
 use static_cell::StaticCell;
 

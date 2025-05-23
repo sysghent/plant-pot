@@ -26,10 +26,14 @@ debug = 2
 opt-level = 0
 
 [workspace.lints]
+clippy.cast-precision-loss = "allow"
+clippy.diverging-sub-expression = "allow"
 clippy.missing-panics-doc = "allow"
+clippy.no-effect-underscore-binding = "allow"
 clippy.pedantic = { level = "warn", priority = -1 }
+clippy.unused-async = "allow"
 clippy.used-underscore-binding = "allow"
-
+rust.unused = "allow"
 
 [workspace.dependencies]
 cortex-m-rt = { version = "0.7.0" }

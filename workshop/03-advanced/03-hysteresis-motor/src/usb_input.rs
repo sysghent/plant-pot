@@ -1,13 +1,10 @@
-use core::fmt::Write;
-
-use defmt::{debug, trace};
-use embassy_rp::{gpio::Output, peripherals::USB, usb::Driver};
+use defmt::debug;
+use embassy_rp::{peripherals::USB, usb::Driver};
 use embassy_usb::{
     UsbDevice,
     class::cdc_acm::{CdcAcmClass, State},
 };
 use heapless::String;
-use num_traits::float::FloatCore;
 use panic_probe as _;
 use static_cell::StaticCell;
 
@@ -89,7 +86,7 @@ pub async fn receive_input(mut usb_io_handle: CdcAcmClass<'static, StaticUsbDriv
 
         todo!(
             "Implement parsing the serial USB input containing the value used to control the \
-             motor speed."
+             motor speed and sending it on a pub sub channel."
         );
     }
 }

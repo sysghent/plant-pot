@@ -16,6 +16,8 @@ rustflags = [
     "link-arg=--nmagic",  #  turns off page alignment of sections 
     "-C",
     "link-arg=-Tlink.x",  # describes the particular memory layout for your specific chip by reading memory.x. 
+    "-C",
+    "link-arg=-Tdefmt.x", # defmt for logging
 ]
 
 

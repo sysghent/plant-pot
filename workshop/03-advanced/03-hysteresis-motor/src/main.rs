@@ -2,18 +2,15 @@
 #![no_main]
 
 use cortex_m_rt as _;
-use defmt::info;
+use defmt::debug;
 use defmt_rtt as _;
 use embassy_executor::{Spawner, main};
 use embassy_futures::yield_now;
 use embassy_rp::{
-    adc::{Adc, Channel, Config},
     config::{self},
-    gpio::{Level, Output, Pull},
-    pwm::{self, Pwm},
+    gpio::{Level, Output},
 };
 use hysteresis_motor::{
-    Irqs,
     motor_control::run_water_pump,
     usb_input::{UsbSetup, maintain_usb_connection, receive_input},
 };
@@ -24,8 +21,6 @@ async fn main(spawner: Spawner) -> ! {
 
     let on_board_pump = Output::new(p.PIN_28, Level::Low);
 
-    let pwm = Pwm::new_output_a(p.PWM_SLICE3, p.PIN_22, pwm::Config::default());
-
     let UsbSetup {
         usb_runtime,
         usb_io_handle,
@@ -34,9 +29,9 @@ async fn main(spawner: Spawner) -> ! {
     spawner.spawn(maintain_usb_connection(usb_runtime)).unwrap();
     spawner.spawn(receive_input(usb_io_handle)).unwrap();
 
-    spawner
-        .spawn(run_water_pump(on_board_pump, pwm.split().0.unwrap()))
-        .unwrap();
+    spawner.spawn(run_water_pump(on_board_pump)).unwrap();
+
+    debug!("Finished spawning tasks");
 
     loop {
         yield_now().await;

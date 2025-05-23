@@ -4,6 +4,7 @@ pub mod inputs;
 pub mod outputs;
 pub mod usb_setup;
 
+use defmt_rtt as _;
 use embassy_rp::{bind_interrupts, peripherals::USB};
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
 use panic_probe as _;

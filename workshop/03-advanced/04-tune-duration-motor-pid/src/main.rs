@@ -7,13 +7,10 @@ use defmt_rtt as _;
 use embassy_executor::{Spawner, main};
 use embassy_futures::yield_now;
 use embassy_rp::{
-    adc::{Adc, Channel, Config},
     config::{self},
-    gpio::{Level, Output, Pull},
-    pwm::{self, Pwm},
+    gpio::{Level, Output},
 };
 use tune_duration_motor_pid::{
-    Irqs,
     motor_control::run_water_pump,
     usb_input::{UsbSetup, maintain_usb_connection, receive_input},
 };
@@ -22,10 +19,6 @@ use tune_duration_motor_pid::{
 async fn main(spawner: Spawner) -> ! {
     info!("Initializing peripherals");
     let p = embassy_rp::init(config::Config::default());
-
-    let adc_component = Adc::new(p.ADC, Irqs, Config::default());
-
-    let humidity_adc_channel = Channel::new_pin(p.PIN_26, Pull::None);
 
     let on_board_pump = Output::new(p.PIN_28, Level::Low);
 

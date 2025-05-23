@@ -14,7 +14,7 @@ async fn main(spawner: Spawner) -> ! {
     info!("Initializing peripherals");
     let p = embassy_rp::init(config::Config::default());
 
-    let mut embassy_net_stack = create_wifi_net_stack(
+    let mut _embassy_net_stack = create_wifi_net_stack(
         spawner, p.PIO0, p.PIN_23, p.PIN_25, p.PIN_24, p.PIN_29, p.DMA_CH0,
     )
     .await;

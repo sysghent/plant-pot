@@ -13,11 +13,9 @@ workspace = true
 
 [dependencies]
 cortex-m-rt = { workspace = true }
-cyw43 = { workspace = true }
-cyw43-pio = { workspace = true }
+defmt-rtt = { workspace = true }
 embassy-executor = { workspace = true }
 embassy-futures = { workspace = true }
-embassy-net = { workspace = true }
 embassy-rp = { workspace = true }
 embassy-sync = { workspace = true }
 embassy-time = { workspace = true }
@@ -25,5 +23,4 @@ embassy-usb = { workspace = true }
 heapless = { workspace = true }
 num-traits = { workspace = true }
 panic-probe = { workspace = true }
-reqwless = { workspace = true }
 static_cell = { workspace = true }

@@ -9,7 +9,6 @@ use embassy_rp::{
     config::{self},
     gpio::{Level, Output, Pull},
     multicore::{Stack, spawn_core1},
-    pwm::{self, Pwm},
 };
 use parallel_tasks::{
     Irqs,

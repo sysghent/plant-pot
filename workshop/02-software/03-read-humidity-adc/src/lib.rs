@@ -1,5 +1,6 @@
 #![no_std]
 
+use defmt_rtt as _;
 use embassy_rp::{
     adc::{Adc, Async, Channel},
     bind_interrupts,
@@ -22,7 +23,7 @@ pub async fn read_adc(
 ) {
     let mut _ticker: Ticker = Ticker::every(Duration::from_millis(500));
 
-    let adc_threshold: u16 =
+    let _adc_threshold: u16 =
         todo!("Find an average ADC value, right after being measured by the ADC unit.");
 
     loop {
@@ -32,7 +33,7 @@ pub async fn read_adc(
             "Wait until first ADC value has been produced and stored in ADC queue. Then turn on \
              the LED"
         );
-        if level < adc_threshold {
+        if level < _adc_threshold {
             _led_pin.set_high();
         } else {
             _led_pin.set_low();

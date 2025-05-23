@@ -114,6 +114,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 
 [[package]]
+name = "blink-light-timers"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -157,6 +178,27 @@ name = "byteorder"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
+
+[[package]]
+name = "calibrate-humidity-sensor"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
 
 [[package]]
 name = "cfg-if"
@@ -902,6 +944,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 
 [[package]]
+name = "hysteresis-motor"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "ident_case"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1008,6 +1073,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
 
 [[package]]
+name = "mobile-notifications"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "nb"
 version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1097,6 +1185,27 @@ checksum = "4047d9235d1423d66cc97da7d07eddb54d4f154d6c13805c6d0793956f4f25b0"
 dependencies = [
  "cortex-m",
  "defmt 0.3.100",
+]
+
+[[package]]
+name = "parallel-tasks"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
 ]
 
 [[package]]
@@ -1291,6 +1400,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
+name = "read-humidity-adc"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.5.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1438,6 +1568,71 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.101",
+]
+
+[[package]]
+name = "serial-input"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
+name = "serial-print-debug"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
+name = "setup-wifi-stack"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
 ]
 
 [[package]]
@@ -1628,6 +1823,52 @@ dependencies = [
 ]
 
 [[package]]
+name = "tune-duration-motor-pid"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
+name = "tune-speed-motor-pwm"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "typenum"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1733,6 +1974,27 @@ checksum = "29790946404f91d9c5d06f9874efddea1dc06c5efe94541a7d6863108e3a5e4b"
 dependencies = [
  "same-file",
  "winapi-util",
+]
+
+[[package]]
+name = "water-pump"
+version = "0.1.0"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
 ]
 
 [[package]]

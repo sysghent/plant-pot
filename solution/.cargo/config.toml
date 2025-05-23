@@ -1,0 +1,28 @@
+
+[build]
+target = "thumbv8m.main-none-eabihf"
+
+[target.thumbv8m.main-none-eabihf]
+# Before the exercise in which you will use the probe-rs for flashing and debugging, uncomment the following line
+# runner = "elf2uf2-rs -d"
+runner = "probe-rs run --chip RP253x"
+rustflags = [
+
+    "-C",
+    "no-vectorize-loops", # turns off the loop vectorizer
+    "-C",
+    "link-arg=--nmagic",  #  turns off page alignment of sections 
+    "-C",
+    "link-arg=-Tlink.x",  # describes the particular memory layout for your specific chip by reading memory.x. 
+    "-C",
+    "link-arg=-Tdefmt.x", # defmt for logging
+]
+
+
+[env]
+DEFMT_LOG = "trace" # In case you use a hardware debugger.
+PASSWORD = "?"      # WiFi password
+SSID = "?"          # WiFi SSID
+
+[unstable]
+build-std = ["alloc", "core"]

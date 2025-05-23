@@ -1,3 +1,16 @@
 # Embedded hardware
 
-In this exercise, you will explore the embedded hardware used in the plant pot project. Begin by identifying each component and understanding its role in the system.
+TODO: explain abbreviations
+
+- PIO
+- GPIO
+- SIO
+- ADC
+- I2C
+- SPI
+- UART
+- PWM
+- I2S
+- USB
+- Serial
+- CDC ACM

@@ -15,10 +15,10 @@ use embassy_rp::{
 };
 use solution::{
     Irqs,
-    control::run_water_pump,
     http_notify::notify_http,
     inputs::measure_humidity,
     outputs::{send_humidity_serial_usb, toggle_onboard_led},
+    pump::run_water_pump,
     usb_setup::{UsbSetup, maintain_usb_connection},
     wifi::create_wifi_net_stack,
 };
@@ -62,17 +62,17 @@ async fn main(spawner: Spawner) -> ! {
         },
     );
 
-    let UsbSetup {
-        usb_runtime,
-        usb_io_handle,
-    } = UsbSetup::new(p.USB);
-
     let mut embassy_net_stack = create_wifi_net_stack(
         spawner, p.PIO0, p.PIN_23, p.PIN_25, p.PIN_24, p.PIN_29, p.DMA_CH0,
     )
     .await;
 
     notify_http(&mut embassy_net_stack, "Raspberry Pico W is online.").await;
+
+    let UsbSetup {
+        usb_runtime,
+        usb_io_handle,
+    } = UsbSetup::new(p.USB);
 
     spawner.spawn(maintain_usb_connection(usb_runtime)).unwrap();
     spawner

@@ -1,3 +1,3 @@
-# Setup wifi stack
+# Setup the WiFi stack of Embassy
 
-This advanced exercise guides you through setting up the WiFi stack on the Raspberry Pi Pico W. Start by configuring the WiFi connection in your code and verify that the device can connect to a network.
+This exercise is a little bit too complicated, so you just have to write a small function to randomize the seed used for authentication WiFi. The rest is done for you.

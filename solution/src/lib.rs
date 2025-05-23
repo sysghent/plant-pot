@@ -1,9 +1,9 @@
 #![no_std]
 
-pub mod control;
 pub mod http_notify;
 pub mod inputs;
 pub mod outputs;
+pub mod pump;
 pub mod usb_setup;
 pub mod wifi;
 

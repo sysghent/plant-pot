@@ -1,3 +1,5 @@
-# Pico2-w overview
+# The Raspberry Pico 2 W
 
-This exercise provides an overview of the Raspberry Pi Pico W board. Get started by reviewing the board's features and how it will be used in the project.
+Get to know the Raspberry Pico 2 W (wireless) microcontroller board.
+
+<https://datasheets.raspberrypi.com/picow/pico-2-w-datasheet.pdf>

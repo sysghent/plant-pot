@@ -12,8 +12,8 @@ use embassy_rp::{
 };
 use parallel_tasks::{
     Irqs,
-    inputs::measure_humidity,
-    outputs::{send_humidity_serial_usb, toggle_onboard_led},
+    humidity_monitors::{send_humidity_serial_usb, toggle_onboard_led},
+    measure_humidity::measure_humidity,
     usb_setup::{UsbSetup, maintain_usb_connection},
 };
 use static_cell::StaticCell;
@@ -32,19 +32,19 @@ async fn main(spawner: Spawner) -> ! {
 
     let on_board_led = Output::new(p.PIN_27, Level::Low);
 
-    spawn_core1(
-        p.CORE1,
-        unsafe { &mut *core::ptr::addr_of_mut!(CORE1_VAR_STACK) },
-        move || {
-            let on_board_executor = CORE1_ASYNC_EXECUTOR.init(Executor::new());
-            on_board_executor.run(|spawner| {
-                spawner
-                    .spawn(measure_humidity(adc_component, humidity_adc_channel))
-                    .unwrap();
-                spawner.spawn(toggle_onboard_led(on_board_led)).unwrap();
-            });
-        },
-    );
+    let stack = unsafe { &mut *core::ptr::addr_of_mut!(CORE1_VAR_STACK) };
+
+    let second_core_task = || {
+        let on_board_executor = CORE1_ASYNC_EXECUTOR.init(Executor::new());
+        on_board_executor.run(|spawner| {
+            spawner
+                .spawn(measure_humidity(adc_component, humidity_adc_channel))
+                .unwrap();
+            spawner.spawn(toggle_onboard_led(on_board_led)).unwrap();
+        });
+    };
+
+    todo!("Use spawn_core1 to run the second task on the second core 'core1' (in a blocking way).");
 
     let UsbSetup {
         usb_runtime,

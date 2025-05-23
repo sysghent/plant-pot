@@ -1,7 +1,7 @@
 #![no_std]
 
-pub mod inputs;
-pub mod outputs;
+pub mod humidity_monitors;
+pub mod measure_humidity;
 pub mod usb_setup;
 
 use defmt_rtt as _;

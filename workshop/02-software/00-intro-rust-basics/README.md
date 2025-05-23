@@ -1,20 +1,5 @@
 # Simple Rust example
 
-## System dependencies
+There are a few good resources to learn Rust. The best (and simplest) one is the [Rust book](https://doc.rust-lang.org/book/).
 
-On NixOS, you can start a shell with the necessary dependencies with:
-
-```bash
-nix-shell --pure
-```
-
-## Rust dependencies
-
-Install the Rust compiler components
-
-```bash
-rustup install stable-x86_64-unknown-linux-gnu
-rustup component add rust-analyzer
-
-rustup target add thumbv8m.main-none-eabihf
-```
+For this workshop, it will mostly be about embedded rust, so you can read the [Embedded Rust book](https://docs.rust-embedded.org/book/).

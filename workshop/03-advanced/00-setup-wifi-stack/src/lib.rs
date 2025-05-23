@@ -1,6 +1,5 @@
 #![no_std]
 
-pub mod inputs;
 pub mod wifi;
 
 use defmt_rtt as _;
@@ -13,6 +12,3 @@ bind_interrupts!(
         PIO0_IRQ_0 => InterruptHandler<PIO0>;
     }
 );
-
-static HUMIDITY_PUBSUB_CHANNEL: PubSubChannel<CriticalSectionRawMutex, f32, 1, 3, 1> =
-    PubSubChannel::new();

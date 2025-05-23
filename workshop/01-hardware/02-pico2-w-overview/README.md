@@ -2,4 +2,4 @@
 
 Get to know the Raspberry Pico 2 W (wireless) microcontroller board.
 
-<https://datasheets.raspberrypi.com/picow/pico-2-w-datasheet.pdf>
+For most engineers or programmers, the starting point is the [official datasheet](https://datasheets.raspberrypi.com/picow/pico-2-w-datasheet.pdf).

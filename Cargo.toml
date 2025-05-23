@@ -1,5 +1,5 @@
 [workspace]
-members = ["solution", "tutorial/01"]
+members = ["solution"]
 resolver = "3"
 
 

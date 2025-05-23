@@ -11,6 +11,7 @@ use embassy_rp::{
     config::{self},
     gpio::{Level, Output, Pull},
     multicore::{Stack, spawn_core1},
+    pwm::{self, Pwm},
 };
 use solution::{
     Irqs,
@@ -40,6 +41,8 @@ async fn main(spawner: Spawner) -> ! {
 
     let on_board_pump = Output::new(p.PIN_28, Level::Low);
 
+    let pwm = Pwm::new_output_a(p.PWM_SLICE3, p.PIN_22, pwm::Config::default());
+
     spawn_core1(
         p.CORE1,
         unsafe { &mut *core::ptr::addr_of_mut!(CORE1_VAR_STACK) },
@@ -52,7 +55,9 @@ async fn main(spawner: Spawner) -> ! {
                     .spawn(measure_humidity(adc_component, humidity_adc_channel))
                     .unwrap();
                 spawner.spawn(toggle_onboard_led(on_board_led)).unwrap();
-                spawner.spawn(run_water_pump(on_board_pump)).unwrap();
+                spawner
+                    .spawn(run_water_pump(on_board_pump, pwm.split().0.unwrap()))
+                    .unwrap();
             });
         },
     );

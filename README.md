@@ -1,46 +1,41 @@
 # Workshop: make a smart plant pot
 
-_(Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025.)_
+(Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025.)
 
 In this workshop you will learn how to create a plant pot that can automatically add water to itself when the humidity of the earth in the pot is too dry.
 
+## Requisites
+
 Please bring:
 
-- A laptop with a working Rust installation (see below).
-- A Micro-USB or USB-C cable
+- A laptop (preferably with `rustup` installed).
+- A USB-C cable
 - A water container (e.g. a cup of water).
 
-You can borrow/buy from us:
+Nice, but not required, read:
 
-- Raspberry Pico H / Pico W / ESP32C6 
+- Embassy book <https://embassy.dev/book/#_for_beginners>
+- Rust book <https://doc.rust-lang.org/book>
+
+## Provided
+
+You can borrow/buy from us (or bring your own):
+
+- Raspberry Pico 2 W (if you bring your own board, pick one with [Embassy support](https://embassy.dev/book/#_getting_a_board_with_examples))
 - Analogue capacitive humidity sensor
-- Small 5V water pump
-- Small breadboard
+- 5V water pump
+- Breadboard
 - Jumper wires
+- Water tubes (TODO: buy in Brico)
+
+You can buy the hardware from us at the end of the workshop.
+
+To follow along, you can follow the structure of the folder [`Workshop`](./workshop/README.md).
+
+## Homework
 
 After the workshop, you will still need to:
 
 - Buy a plant
-- Buy tubes to connect the pump to the plant pot
-
-## Schedule
-
-
-The workshop is divided into parts:
-
-1. Introduction to embedded hardware.
-2. Introduction to embedded software.
-3. Making a simple LED blink.
-4. Performing digital measurements.
-5. Implement HTTP notifications / further optimisation.
-
-At the end you will have a working plant pot that can water itself.
-
-You can buy the hardware from us at the end of the workshop.
-
-To start with:
-
-- [Hardware](./docs/HARDWARE.md)
-- [Tutorial](./tutorial/README.md)
-
-
+- Provide a plastic cover for the electronics
+- Provide battery power

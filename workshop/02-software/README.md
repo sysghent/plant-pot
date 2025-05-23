@@ -33,6 +33,8 @@ The Embassy project provides a plugin that allows to use the specific hardware o
 
 ## Follow exercises
 
+This folder contains the exercises for the plant pot workshop. Each subfolder contains a separate exercise with its own README and starter code. Begin each exercise by reading the README in the corresponding subfolder.
+
 The basic, required dependencies are already listed in the top-level (workspace-level) `Cargo.toml` file.
 
 For solving the exercises, you might need to add additional dependencies.
@@ -44,7 +46,3 @@ Examples can be found in the `examples` folder of the Embassy project: <https://
 ## Launching a debug session
 
 Use `probe-rs`.
-
-## Advanced topics
-
-[Advanced topics](../docs/SOFTWARE_ADVANCED.md) are optional and can be skipped if you are not interested in them.

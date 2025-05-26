@@ -5,7 +5,9 @@ The Embassy framework provides an asynchronous executor that can be used to run 
 
 Different tasks can have different priorities by assigning them to executors on different cores manually. This will be demonstrated in one of the exercises.
 
-_**Remark**: Different tasks are run co-operatively. If you want more automatic scheduling of tasks, you need to use a different framework, [RTIC](https://github.com/rtic-rs/rtic) that can suspend running tasks._
+Embassy tasks are run cooperatively: we assume they will give up (yield) control voluntarily to other tasks. If you want more automatic scheduling of tasks, you need to use a different framework, [RTIC](https://github.com/rtic-rs/rtic) that can suspend running tasks.
+
+For a more standard synchronous (blocking) API, you can use the rp253x-hal crate, which is a hardware abstraction layer (HAL) for the Raspberry Pi Pico 2 W. This HAL provides a synchronous API to interact with the hardware peripherals of the micro-controller.
 
 ## Standardized API
 

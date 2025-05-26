@@ -6,3 +6,4 @@ Hands-on embedded Rust books:
 
 - There is a book for beginners in embedded Rust:  [Rust Discovery Embedded book](https://docs.rust-embedded.org/discovery-mb2/). It assumes you have bought a Microbit v2 (20 euros).
 - There is also a book about embedded Rust using an STM32 chip: [Embedded Rust book](https://docs.rust-embedded.org/book/).
+- Another book about Rust and the Pico 2 [Pico Pico](https://pico.implrust.com)

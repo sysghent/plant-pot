@@ -3,7 +3,6 @@
 
 use cortex_m_rt as _;
 use embassy_executor::{Spawner, main};
-use embassy_futures::yield_now;
 use embassy_rp::{
     adc::{Adc, Channel, Config},
     config::{self},
@@ -12,7 +11,7 @@ use embassy_rp::{
 use read_humidity_adc::{Irqs, read_adc};
 
 #[main]
-async fn main(spawner: Spawner) -> ! {
+async fn main(_spawner: Spawner) -> ! {
     let p = embassy_rp::init(config::Config::default());
 
     let adc_component = Adc::new(p.ADC, Irqs, Config::default());
@@ -21,11 +20,5 @@ async fn main(spawner: Spawner) -> ! {
 
     let led_pin = Output::new(p.PIN_22, Level::Low);
 
-    spawner
-        .spawn(read_adc(adc_component, humidity_adc_channel, led_pin))
-        .unwrap();
-
-    loop {
-        yield_now().await;
-    }
+    read_adc(adc_component, humidity_adc_channel, led_pin).await
 }

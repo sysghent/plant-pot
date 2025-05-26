@@ -1,11 +1,10 @@
-use core::fmt::Write;
+use embedded_io::Write;
 
-use embassy_rp::gpio::Output;
-use embassy_usb::class::cdc_acm::CdcAcmClass;
-use heapless::String;
-use num_traits::float::FloatCore;
+use embassy_executor::Spawner;
+use embassy_rp::{gpio::Output, peripherals::USB};
+use embassy_rp_io::usb::BasicUsbSetup;
 
-use crate::{HUMIDITY_PUBSUB_CHANNEL, usb_setup::StaticUsbDriver};
+use crate::{HUMIDITY_PUBSUB_CHANNEL, Irqs};
 
 #[embassy_executor::task]
 pub async fn toggle_onboard_led(mut led: Output<'static>) {
@@ -23,20 +22,18 @@ pub async fn toggle_onboard_led(mut led: Output<'static>) {
     }
 }
 
-#[embassy_executor::task]
-pub async fn send_humidity_serial_usb(mut usb_io_handle: CdcAcmClass<'static, StaticUsbDriver>) {
-    let mut serial_msg_buf = String::<64>::new();
-    let mut humidity_receiver = HUMIDITY_PUBSUB_CHANNEL.subscriber().unwrap();
+pub async fn send_humidity_serial_usb(usb: USB, spawner: Spawner) -> ! {
+    let usb = BasicUsbSetup::new(usb, Irqs);
 
-    loop {
-        let humidity = humidity_receiver.next_message_pure().await;
-        let humidity_perc = (humidity * 100.0).floor();
+    let mut humidity_sensor = HUMIDITY_PUBSUB_CHANNEL.subscriber().unwrap();
 
-        serial_msg_buf.clear();
-        write!(&mut serial_msg_buf, "Humidity: {humidity_perc} %\r\n").unwrap();
-        usb_io_handle
-            .write_packet(serial_msg_buf.as_bytes())
-            .await
-            .unwrap();
-    }
+    usb.send(
+        async |mut buf| {
+            let humidity = humidity_sensor.next_message_pure().await;
+
+            write!(buf, "Humidity: {humidity:.2} %\r\n").unwrap();
+        },
+        spawner,
+    )
+    .await
 }

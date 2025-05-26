@@ -15,12 +15,11 @@ bind_interrupts!(
     }
 );
 
-#[embassy_executor::task]
 pub async fn read_adc(
     mut _adc: Adc<'static, Async>,
     mut _humidity_pin: Channel<'static>,
     _led_pin: Output<'static>,
-) {
+) -> ! {
     let mut _ticker: Ticker = Ticker::every(Duration::from_millis(500));
 
     let _adc_threshold: u16 =
@@ -29,11 +28,11 @@ pub async fn read_adc(
     loop {
         _ticker.next().await;
 
-        let level: u16 = todo!(
+        let _level: u16 = todo!(
             "Wait until first ADC value has been produced and stored in ADC queue. Then turn on \
              the LED"
         );
-        if level < _adc_threshold {
+        if _level < _adc_threshold {
             _led_pin.set_high();
         } else {
             _led_pin.set_low();

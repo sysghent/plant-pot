@@ -1,0 +1,33 @@
+
+[build]
+target = "thumbv8m.main-none-eabihf"
+
+[target.thumbv8m.main-none-eabihf]
+# Press the white `bootsel` button while plugging in the USB cable to enter bootloader mode
+runner = "elf2uf2-rs -d --serial"
+
+# Uncomment the following line if you want to use the `picotool` for flashing
+# runner = "picotool load -u -v -x -t elf"
+
+
+# In case you want to use probe-rs for flashing and debugging, uncomment the following line
+# runner = "probe-rs run --chip RP253x"
+
+
+rustflags = [
+
+    "-C",
+    "no-vectorize-loops", # turns off the loop vectorizer
+    "-C",
+    "link-arg=--nmagic",  #  turns off page alignment of sections 
+    "-C",
+    "link-arg=-Tlink.x",  # describes the particular memory layout for your specific chip by reading memory.x. 
+    "-C",
+    "link-arg=-Tdefmt.x", # defmt for logging
+]
+
+
+[env]
+DEFMT_LOG = "trace" # In case you use a hardware debugger.
+PASSWORD = "?"      # WiFi password
+SSID = "?"          # WiFi SSID

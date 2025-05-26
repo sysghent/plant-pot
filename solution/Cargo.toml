@@ -12,42 +12,20 @@ repository = "https://github.com/sysghent/plant-pot"
 
 
 [dependencies]
-cortex-m-rt = { version = "0.7.0" }
-cyw43 = { version = "0.3.0", features = ["defmt", "firmware-logs"] }
-cyw43-pio = { version = "0.4.0", features = ["defmt"] }
+cortex-m-rt.workspace = true
+cyw43.workspace = true
+cyw43-pio.workspace = true
 defmt = "1.0.1"
 defmt-rtt = "1.0.0"
-embassy-executor = { version = "0.7.0", features = [
-    "arch-cortex-m",
-    "defmt",
-    "executor-interrupt",
-    "executor-thread",
-] }
-embassy-futures = { version = "0.1.1" }
-embassy-net = { version = "0.7.0", features = [
-    "proto-ipv4",
-    "dns",
-    "tcp",
-    "medium-ip",
-    "dhcpv4",
-    "defmt",
-] }
-embassy-rp = { version = "0.4.0", features = [
-    "defmt",
-    "unstable-pac",
-    "time-driver",
-    "critical-section-impl",
-    "rp235xa",
-    "binary-info",
-] }
-embassy-sync = { version = "0.6.2", features = ["defmt"] }
-embassy-time = { version = "0.4.0", features = [
-    "defmt",
-    "defmt-timestamp-uptime",
-] }
-embassy-usb = { version = "0.4.0", features = ["defmt"] }
-heapless = "0.8.0"
-num-traits = { version = "0.2.19", default-features = false }
-panic-probe = { version = "0.3", features = ["print-defmt"] }
-reqwless = { version = "0.13.0", default-features = false }
-static_cell = { version = "2.1.0" }
+embassy-executor.workspace = true
+embassy-futures.workspace = true
+embassy-net.workspace = true
+embassy-rp.workspace = true
+embassy-sync.workspace = true
+embassy-time.workspace = true
+embassy-usb.workspace = true
+heapless.workspace = true
+num-traits.workspace = true
+panic-probe.workspace = true
+reqwless.workspace = true
+static_cell.workspace = true

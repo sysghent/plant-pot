@@ -1,0 +1,11 @@
+[default.general]
+chip = "rp235x"
+
+[default.reset]
+halt_afterwards = true
+
+[default.rtt]
+enabled = true
+
+[default.gdb]
+enabled = true

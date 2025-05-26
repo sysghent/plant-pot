@@ -11,9 +11,8 @@ use embassy_rp::{
     config::{self},
     gpio::Pull,
 };
-use mobile_notifications::{
-    Irqs, http_notify::notify_http, inputs::measure_humidity, wifi::create_wifi_net_stack,
-};
+use embassy_rp_io::wifi::BasicWiFi;
+use mobile_notifications::{Irqs, http_notify::notify_http, measure_humidity::keep_measuring};
 
 #[main]
 async fn main(spawner: Spawner) -> ! {
@@ -25,13 +24,18 @@ async fn main(spawner: Spawner) -> ! {
     let humidity_adc_channel = Channel::new_pin(p.PIN_26, Pull::None);
 
     spawner
-        .spawn(measure_humidity(adc_component, humidity_adc_channel))
+        .spawn(keep_measuring(adc_component, humidity_adc_channel))
         .unwrap();
 
-    let mut embassy_net_stack = create_wifi_net_stack(
-        spawner, p.PIO0, p.PIN_23, p.PIN_25, p.PIN_24, p.PIN_29, p.DMA_CH0,
-    )
-    .await;
+    let wifi_peripherals = BasicWiFi {
+        pio: p.PIO0,
+        pwr_pin_23: p.PIN_23,
+        cs_pin_25: p.PIN_25,
+        dio_pin_24: p.PIN_24,
+        clk_pin_29: p.PIN_29,
+        dma_ch_0: p.DMA_CH0,
+    };
+    let mut embassy_net_stack = wifi_peripherals.start(spawner, Irqs).await;
 
     notify_http(&mut embassy_net_stack, "Raspberry Pico W is online.").await;
 

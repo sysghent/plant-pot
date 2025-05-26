@@ -2,8 +2,6 @@
 
 In this exercise you will see how to `print`-debug your code. You will find a way to send simple string messages over the USB cable to your laptop. This is a simple way to debug your code without using a debugger.
 
-In later exercises you will see a slightly faster way (using `RTT` and `defmt`), but for now we will use simple serial output.
-
 ## Pre-requisites
 
 Install a serial monitor. On Linux you can use `tio` or `picocom`. On Windows you can use `PuTTY` or `Tera Term`. On MacOS you can use `screen` or `CoolTerm`.

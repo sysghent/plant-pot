@@ -115,23 +115,14 @@ checksum = "1b8e56985ec62d17e9c1001dc89c88ecd7dc08e47eba5ec7c29c7b5eeecde967"
 
 [[package]]
 name = "blink-light-timers"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -181,23 +172,18 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "calibrate-humidity-sensor"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
+ "embassy-rp-io",
  "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
+ "embedded-io",
  "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -569,10 +555,26 @@ dependencies = [
  "nb 1.1.0",
  "pio",
  "rand_core",
+ "rp-binary-info",
  "rp-pac",
  "rp2040-boot2",
  "sha2-const-stable",
  "smart-leds",
+]
+
+[[package]]
+name = "embassy-rp-io"
+version = "0.0.1"
+dependencies = [
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "embassy-executor",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-time",
+ "embassy-usb",
+ "static_cell",
 ]
 
 [[package]]
@@ -945,25 +947,15 @@ checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 
 [[package]]
 name = "hysteresis-motor"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
- "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
+ "embassy-rp-io",
  "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -980,6 +972,18 @@ checksum = "cea70ddb795996207ad57735b50c5982d8844f38ba9ee5f1aedcfb708a2aa11e"
 dependencies = [
  "equivalent",
  "hashbrown 0.15.3",
+]
+
+[[package]]
+name = "intro-async-embassy"
+version = "0.0.1"
+dependencies = [
+ "cortex-m-rt",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-rp",
+ "panic-probe",
 ]
 
 [[package]]
@@ -1074,25 +1078,21 @@ checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
 
 [[package]]
 name = "mobile-notifications"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
  "embassy-net",
  "embassy-rp",
+ "embassy-rp-io",
  "embassy-sync",
  "embassy-time",
- "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
  "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -1189,22 +1189,17 @@ dependencies = [
 
 [[package]]
 name = "parallel-tasks"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
+ "embassy-rp-io",
  "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
+ "embedded-io",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1401,23 +1396,14 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "read-humidity-adc"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -1485,6 +1471,12 @@ checksum = "57397d16646700483b67d2dd6511d79318f9d057fdbd21a4066aeac8b41d310a"
 dependencies = [
  "bytemuck",
 ]
+
+[[package]]
+name = "rp-binary-info"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "88ed2051a0bf2c726df01cfce378ed8a367be2a6e402fc183857f429a346d429"
 
 [[package]]
 name = "rp-pac"
@@ -1572,49 +1564,34 @@ dependencies = [
 
 [[package]]
 name = "serial-input"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
+ "embassy-rp-io",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
 name = "serial-print-debug"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
  "embassy-usb",
  "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
 [[package]]
 name = "setup-wifi-stack"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
  "cyw43",
@@ -1625,13 +1602,8 @@ dependencies = [
  "embassy-futures",
  "embassy-net",
  "embassy-rp",
- "embassy-sync",
  "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 
@@ -1824,48 +1796,29 @@ dependencies = [
 
 [[package]]
 name = "tune-duration-motor-pid"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
+ "embassy-rp-io",
  "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
 name = "tune-speed-motor-pwm"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
- "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
+ "embassy-rp-io",
  "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -1978,23 +1931,14 @@ dependencies = [
 
 [[package]]
 name = "water-pump"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
+ "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "heapless",
- "num-traits",
+ "embassy-rp-io",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]

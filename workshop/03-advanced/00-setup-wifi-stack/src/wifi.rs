@@ -52,13 +52,10 @@ pub async fn create_wifi_net_stack(
     );
 
     let radio_state = RADIO_STATE.init(cyw43::State::new());
-    let (interfaces, mut control, runner) = cyw43::new(radio_state, pwr, spi, fw).await;
+    let (_interfaces, mut control, runner) = cyw43::new(radio_state, pwr, spi, fw).await;
     spawner.spawn(cyw43_task(runner)).unwrap();
 
     control.init(clm).await;
-    control
-        .set_power_management(cyw43::PowerManagementMode::PowerSave)
-        .await;
 
     info!("Disabling power saving.");
     control
@@ -66,18 +63,21 @@ pub async fn create_wifi_net_stack(
         .await;
 
     info!("Creating DHCP configuration.");
-    let dhcp_config = embassy_net::Config::dhcpv4(DhcpConfig::default());
+    let _dhcp_config = embassy_net::Config::dhcpv4(DhcpConfig::default());
 
     // TODO: randomise this
-    let seed = todo!("Create a random seed within the no_std context");
+    let _seed = todo!(
+        "Create a random seed within the no_std context using a hardware random number generator \
+         of the Pico."
+    );
 
     info!("Creating network stack.");
     // Init network stack
     let (net_stack, runner) = embassy_net::new(
-        interfaces,
-        dhcp_config,
+        _interfaces,
+        _dhcp_config,
         STACK_RESOURCES.init(StackResources::<3>::new()),
-        seed,
+        _seed,
     );
 
     info!("Spawning WIFI helper tasks.");

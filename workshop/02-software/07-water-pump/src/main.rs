@@ -3,16 +3,13 @@
 
 use cortex_m_rt as _;
 use embassy_executor::{Spawner, main};
-use embassy_futures::yield_now;
 use embassy_rp::{
     config::{self},
     gpio::{Level, Output},
     pwm::{self, Pwm},
 };
-use water_pump::{
-    control::run_water_pump,
-    usb_input::{UsbSetup, maintain_usb_connection, receive_input},
-};
+use embassy_rp_io::usb::BasicUsbSetup;
+use water_pump::{Irqs, control::run_water_pump};
 
 #[main]
 async fn main(spawner: Spawner) -> ! {
@@ -26,15 +23,10 @@ async fn main(spawner: Spawner) -> ! {
         .spawn(run_water_pump(on_board_pump, pwm.split().0.unwrap()))
         .unwrap();
 
-    let UsbSetup {
-        usb_runtime,
-        usb_io_handle,
-    } = UsbSetup::new(p.USB);
-
-    spawner.spawn(maintain_usb_connection(usb_runtime)).unwrap();
-    spawner.spawn(receive_input(usb_io_handle)).unwrap();
-
-    loop {
-        yield_now().await;
-    }
+    BasicUsbSetup::new(p.USB, Irqs)
+        .receive(
+            async |_bytes| todo!("Write a parser that handles incoming USB data"),
+            spawner,
+        )
+        .await
 }

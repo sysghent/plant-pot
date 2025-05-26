@@ -1,7 +1,5 @@
 use core::fmt::Write;
 
-use defmt::info;
-use embassy_futures::yield_now;
 use embassy_net::{
     dns::DnsSocket,
     tcp::client::{TcpClient, TcpClientState},
@@ -18,9 +16,6 @@ pub async fn notify_http(net_stack: &mut embassy_net::Stack<'_>, message: &str) 
     let mut body = String::<64>::new();
     body.write_str(message).unwrap();
     let mut _buffer = [0u8; 64];
-    info!("Sending notification to ntfy.sh");
 
     todo!("Create an HTTP request to ntfy.sh with the message in the body.");
-
-    yield_now().await;
 }

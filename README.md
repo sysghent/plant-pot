@@ -8,9 +8,9 @@ In this workshop you will learn how to create a plant pot that can automatically
 
 Please bring:
 
-- A laptop (preferably with `rustup` installed).
+- A laptop (preferably with `rustup` installed and Linux)
 - A USB-C cable
-- A water container (e.g. a cup of water).
+- A water container (e.g. a cup of water)
 
 Nice, but not required, read:
 
@@ -26,6 +26,9 @@ You can borrow/buy from us (or bring your own):
 - 5V water pump
 - Breadboard
 - Jumper wires
+- LED
+- MOSFET transistor
+- resistor
 - Water tubes (TODO: buy in Brico)
 
 You can buy the hardware from us at the end of the workshop.

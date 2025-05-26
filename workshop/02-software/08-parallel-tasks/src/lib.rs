@@ -2,7 +2,6 @@
 
 pub mod humidity_monitors;
 pub mod measure_humidity;
-pub mod usb_setup;
 
 use defmt_rtt as _;
 use embassy_rp::{bind_interrupts, peripherals::USB};

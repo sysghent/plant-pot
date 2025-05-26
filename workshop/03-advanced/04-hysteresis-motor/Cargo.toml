@@ -1,0 +1,21 @@
+[package]
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "hysteresis-motor"
+repository.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+
+[dependencies]
+cortex-m-rt = { workspace = true }
+defmt-rtt = { workspace = true }
+embassy-executor = { workspace = true }
+embassy-rp = { workspace = true }
+embassy-rp-io.workspace = true
+embassy-sync = { workspace = true }
+panic-probe = { workspace = true }

@@ -1,7 +1,5 @@
 #![no_std]
 
-pub mod usb_input;
-
 use defmt_rtt as _;
 use embassy_rp::{bind_interrupts, peripherals::USB};
 use panic_probe as _;

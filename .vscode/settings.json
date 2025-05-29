@@ -1,4 +1,7 @@
 {
-    "rust-analyzer.cargo.allTargets": false,
     "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.cargo.allTargets": false,
+    "editor.semanticHighlighting.enabled": true,
+    "rust-analyzer.semanticHighlighting.punctuation.enable": true,
+    "rust-analyzer.semanticHighlighting.punctuation.specialization.enable": true
 }

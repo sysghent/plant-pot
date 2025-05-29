@@ -1,0 +1,25 @@
+[package]
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "async-embassy"
+repository.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+defmt-rtt = { workspace = true }
+embassy-executor = { workspace = true }
+embassy-futures = { workspace = true }
+embassy-rp = { workspace = true }
+embassy-sync.workspace = true
+embassy-time.workspace = true
+embassy-usb = { workspace = true }
+embedded-io = "0.6.1"
+heapless = { workspace = true }
+num-traits.workspace = true
+panic-probe = { workspace = true }
+static_cell = { workspace = true }

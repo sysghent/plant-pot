@@ -11,21 +11,23 @@
 use std::{env, fs::File, io::Write, path::PathBuf};
 
 fn main() {
-    // Put `memory.x` in our output directory and ensure it's
-    // on the linker search path.
-    let out = &PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    File::create(out.join("memory.x"))
-        .unwrap()
-        .write_all(include_bytes!("memory.x"))
-        .unwrap();
-
-    println!("Wrote memory.x to {}", out.display());
-
+    // Put the linker script somewhere the linker can find it
+    let out = PathBuf::from(std::env::var_os("OUT_DIR").unwrap());
     println!("cargo:rustc-link-search={}", out.display());
 
-    // By default, Cargo will re-run a build script whenever
-    // any file in the project changes. By specifying `memory.x`
-    // here, we ensure the build script is only re-run when
-    // `memory.x` is changed.
+    // The file `memory.x` is loaded by cortex-m-rt's `link.x` script, which
+    // is what we specify in `.cargo/config.toml` for Arm builds
+    let memory_x = include_bytes!("memory.x");
+    let mut f = File::create(out.join("memory.x")).unwrap();
+    f.write_all(memory_x).unwrap();
     println!("cargo:rerun-if-changed=memory.x");
+
+    // The file `rp235x_riscv.x` is what we specify in `.cargo/config.toml` for
+    // RISC-V builds
+    let rp235x_riscv_x = include_bytes!("rp235x_riscv.x");
+    let mut f = File::create(out.join("rp235x_riscv.x")).unwrap();
+    f.write_all(rp235x_riscv_x).unwrap();
+    println!("cargo:rerun-if-changed=rp235x_riscv.x");
+
+    println!("cargo:rerun-if-changed=build.rs");
 }

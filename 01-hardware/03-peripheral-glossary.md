@@ -1,0 +1,1 @@
+# Microcontroller jargon glossary

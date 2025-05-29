@@ -1,14 +1,16 @@
 {
   pkgs ? import <nixpkgs> { },
+
 }:
+
 pkgs.mkShell {
+
   buildInputs = with pkgs; [
     clang_19
     cargo-binutils # For `cargo objdump` and `cargo size`
     elf2uf2-rs # If your device uses UF2 files for flashing.
     picotool # In case you want to use offical Raspberry Pi tools
     rustup
-    probe-rs-tools
     tio # For reading serial output
     openocd
     gdb

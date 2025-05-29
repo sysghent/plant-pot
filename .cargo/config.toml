@@ -4,14 +4,14 @@ target = "thumbv8m.main-none-eabihf"
 
 [target.thumbv8m.main-none-eabihf]
 # Press the white `bootsel` button while plugging in the USB cable to enter bootloader mode
-runner = "elf2uf2-rs -d --serial"
+# runner = "elf2uf2-rs -d "
 
 # Uncomment the following line if you want to use the `picotool` for flashing
 # runner = "picotool load -u -v -x -t elf"
 
 
 # In case you want to use probe-rs for flashing and debugging, uncomment the following line
-# runner = "probe-rs run --chip RP253x"
+runner = "probe-rs run --chip RP235x"
 
 
 rustflags = [

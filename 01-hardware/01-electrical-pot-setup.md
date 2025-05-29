@@ -7,3 +7,5 @@ We will start by making a small setup with only a minimal amount of required com
 _*Remark*: If you already have some experience with electronics, you can skip this section._
 
 The core of this project is a Pico W 2 microcontroller. To know how to connect jumper cables (in general), you need to have a quick look first at its ["pin-out" diagram](https://datasheets.raspberrypi.com/picow/pico-2-w-pinout.pdf).
+
+TODO: explain the basics of electrical components, formulas, names.

@@ -16,7 +16,6 @@
 #![no_std]
 #![no_main]
 
-use cortex_m_rt as _;
 use defmt_rtt as _;
 use embassy_executor::{Spawner, main};
 use embassy_rp::{

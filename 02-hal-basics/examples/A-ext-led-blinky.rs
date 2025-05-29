@@ -26,7 +26,6 @@ const XTAL_FREQ_HZ: u32 = 12_000_000u32;
 ///
 /// The function configures the rp235x peripherals, then toggles a GPIO pin in
 /// an infinite loop. If there is an LED connected to that pin, it will blink.
-///
 
 #[hal::entry]
 fn main() -> ! {
@@ -48,8 +47,6 @@ fn main() -> ! {
     )
     .unwrap();
 
-    let mut timer = hal::Timer::new_timer0(pac.TIMER0, &mut pac.RESETS, &clocks);
-
     // The single-cycle I/O block controls our GPIO pins
     let sio = hal::Sio::new(pac.SIO);
 
@@ -61,8 +58,10 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    // Configure GPIO25 as an output
     let mut led_pin = pins.gpio25.into_push_pull_output();
+
+    let mut timer = hal::Timer::new_timer0(pac.TIMER0, &mut pac.RESETS, &clocks);
+
     loop {
         led_pin.set_high().unwrap();
         timer.delay_ms(500);

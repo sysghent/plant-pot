@@ -14,7 +14,6 @@ workspace = true
 defmt-rtt.workspace = true
 embedded-hal = "1.0.0"
 panic-halt.workspace = true
-# riscv-rt = "0.14.0"
 rp235x-hal = { version = "0.3.0", default-features = false, features = [
     "binary-info",
     "critical-section-impl",

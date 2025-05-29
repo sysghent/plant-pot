@@ -11,6 +11,7 @@ version.workspace = true
 workspace = true
 
 [dependencies]
+cortex-m-rt.workspace = true
 defmt-rtt = { workspace = true }
 embassy-executor = { workspace = true }
 embassy-futures = { workspace = true }

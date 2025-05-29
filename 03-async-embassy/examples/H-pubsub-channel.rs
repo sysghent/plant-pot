@@ -1,12 +1,12 @@
 //! In this exercise you will combine measuring the humidity of the soil with
 //! driving the water pump. On way to accomplish this is by using a channel.
 //!
-//! TODO: Show how the SIO FIFO queue can be used to send messages between cores.
+//! TODO: Show how the SIO FIFO queue can be used to send messages between
+//! cores (seems unavailable in Embassy).
 
 #![no_std]
 #![no_main]
 
-use cortex_m_rt as _;
 use defmt_rtt as _;
 use embassy_executor::{Executor, Spawner, main};
 use embassy_rp::{
@@ -20,6 +20,7 @@ use embassy_rp::{
 };
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
 use embassy_time::{Duration, Ticker, Timer};
+use panic_probe as _;
 use static_cell::StaticCell;
 
 static CORE1_ASYNC_EXECUTOR: StaticCell<Executor> = StaticCell::new();

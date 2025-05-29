@@ -15,7 +15,6 @@
 
 use async_embassy::usb::BasicUsbSetup;
 use cortex_m_rt as _;
-use defmt::info;
 use defmt_rtt as _;
 use embassy_executor::{Spawner, main};
 use embassy_rp::{
@@ -100,7 +99,6 @@ pub async fn run_water_pump(mut _pump: Output<'static>) {
         let humidity = humidity_receiver.next_message_pure().await;
         let control = pid.update(TARGET_HUMIDITY, humidity, DT);
 
-        // Map PID output to PWM duty cycle (0.0 - 1.0) and duration (seconds)
         let intensity = control.clamp(0.0, 1.0); // Clamp to [0,1]
         let min_duration = 0.5; // Minimum pump run time in seconds
         let max_duration = 3.0; // Maximum pump run time in seconds

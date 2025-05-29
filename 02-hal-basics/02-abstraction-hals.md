@@ -20,6 +20,11 @@ There are also asynchronous HALs available:
 - Embassy: co-operative async <https://crates.io/crates/embassy>
 - RTIC: pre-emptive async  <https://github.com/rtic-rs/rtic>
 
+Even on medium level, you still need to specify a `panic_handler`. Or you can just use an existing definition:
+
+- `panic-probe` (for apps with `defmt` logging)
+- `panic-halt` (for normal HAL usage)
+
 ## High level
 
 Normally, for commonly used micro-controllers, there should at least be one good board support package (also called BSP).

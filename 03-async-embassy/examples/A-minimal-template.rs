@@ -10,7 +10,7 @@
 // The code does not directly contain imports of objects from these libraries,
 // but these libraries contain static data that is important to be able to run
 // the code on an embedded system.
-use cortex_m_rt as _;
+
 use defmt_rtt as _;
 // Real import dependencies
 use embassy_executor::{Spawner, main};

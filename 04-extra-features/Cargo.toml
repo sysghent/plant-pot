@@ -13,6 +13,7 @@ workspace = true
 
 [dependencies]
 async-embassy = { path = "../03-async-embassy" }
+cortex-m-rt.workspace = true
 cyw43.workspace = true
 cyw43-pio.workspace = true
 defmt = { workspace = true }

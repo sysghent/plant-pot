@@ -17,14 +17,16 @@
 #![no_std]
 #![no_main]
 
-use cortex_m_rt as _;
+use defmt_rtt as _;
 use embassy_executor::{Executor, Spawner, main};
 use embassy_futures::yield_now;
 use embassy_rp::{
     config::{self},
     multicore::Stack,
 };
+use panic_probe as _;
 use static_cell::StaticCell;
+
 static CORE1_ASYNC_EXECUTOR: StaticCell<Executor> = StaticCell::new();
 
 static mut CORE1_VAR_STACK: Stack<4096> = Stack::new();

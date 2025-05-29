@@ -13,8 +13,8 @@
 //!
 //! You will need:
 //!
-//! - An external LED, red ones have a forward voltage of 1.8 V and maximum current of 20
-//!   mA.
+//! - An external LED, red ones have a forward voltage of 1.8 V and maximum
+//!   current of 20 mA.
 //! - A resistor of 100 Ohm.
 //! - Power supply of Pico with max output of 3.3 V.
 //!

@@ -42,6 +42,7 @@ dependencies = [
 name = "async-embassy"
 version = "0.0.1"
 dependencies = [
+ "cortex-m-rt",
  "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
@@ -437,6 +438,7 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "90327bcc66333a507f89ecc4e2d911b265c45f5c9bc241f98eee076752d35ac6"
 dependencies = [
+ "cortex-m",
  "critical-section",
  "defmt 0.3.100",
  "document-features",
@@ -750,6 +752,7 @@ name = "extra-features"
 version = "0.0.1"
 dependencies = [
  "async-embassy",
+ "cortex-m-rt",
  "cyw43",
  "cyw43-pio",
  "defmt 1.0.1",

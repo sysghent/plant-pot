@@ -44,7 +44,7 @@ use panic_probe as _;
 async fn main(_spawner: Spawner) -> ! {
     let p = embassy_rp::init(config::Config::default());
 
-    let mut led_pin = Output::new(p.PIN_15, Level::Low);
+    let mut led_pin = Output::new(p.PIN_27, Level::High);
 
     let mut ticker: Ticker = Ticker::every(Duration::from_millis(500));
 

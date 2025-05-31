@@ -49,9 +49,9 @@ rustflags = [
 # runner = "picotool load -u -v -x -t elf"
 # runner = "elf2uf2-rs -d "
 
-runner = "picotool load -u -v -x -t elf"
-
-
+# runner = "picotool load -u -v -x -t elf"
+runner = "probe-rs run --chip RP235x"
+# runner = "probe-rs run"
 # This is the soft-float ABI for Arm mode.
 #
 # The FPU is disabled by default, and float function arguments use integer

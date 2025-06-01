@@ -2,7 +2,7 @@
 members = [
     "02-embedded-hal-basics",
     "03-minimal-async-pot",
-    "04-making-sensors",
+    "04-making-sensors-probes",
     "05-network-connectivity",
     "06-fine-motor-control",
     "07-optimising-performance",

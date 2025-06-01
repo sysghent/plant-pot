@@ -17,6 +17,5 @@ panic-halt.workspace = true
 rp235x-hal = { version = "0.3.0", default-features = false, features = [
     "binary-info",
     "critical-section-impl",
-
     "defmt",
 ] }

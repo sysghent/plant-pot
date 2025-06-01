@@ -43,6 +43,7 @@ Look up the codename for the model/architecture of target board. For Pico 1, thi
 Adjust the [`.cargo/config.toml`] file if necessary. For example, if you are using a Pico 2 W as a target, you can use the following configuration (below the section for your current build target):
 
 ```toml
+[target.thumbv8m.main-none-eabi]
 runner = "probe-rs run --chip RP235x"
 ```
 
@@ -54,4 +55,11 @@ Just run:
 
 ```bash
 cargo run
+```
+
+You can also set up a configuration file `Embed.toml` that contains the chip type and certain options (like whether to activate a debugging session with GDB). You can then use `cargo embed` to flash the binary and start a GDB session.
+
+```toml
+[target.thumbv8m.main-none-eabi]
+runner = "cargo embed"
 ```

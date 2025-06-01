@@ -6,7 +6,7 @@
 use defmt_rtt as _;
 use embedded_hal::{delay::DelayNs, digital::OutputPin};
 // Necessary for Risc-V target.
-use hal_basics as _;
+use embedded_hal_basics as _;
 use panic_halt as _;
 use rp235x_hal::{self as hal};
 

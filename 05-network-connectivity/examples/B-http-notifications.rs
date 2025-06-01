@@ -25,8 +25,8 @@ use embassy_rp::{
 };
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
 use embassy_time::{Duration, Timer};
-use extra_features::wifi::{BasicWiFi, NetStackControl};
 use heapless::String;
+use network_connectivity::wifi::{BasicWiFi, NetStackControl};
 use panic_probe as _;
 use reqwless::client::HttpClient;
 

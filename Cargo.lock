@@ -39,25 +39,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "async-embassy"
-version = "0.0.1"
-dependencies = [
- "cortex-m-rt",
- "defmt-rtt",
- "embassy-executor",
- "embassy-futures",
- "embassy-rp",
- "embassy-sync",
- "embassy-time",
- "embassy-usb",
- "embedded-io",
- "heapless",
- "num-traits",
- "panic-probe",
- "static_cell",
-]
-
-[[package]]
 name = "atomic-polyfill"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -664,6 +645,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "embedded-hal-basics"
+version = "0.0.1"
+dependencies = [
+ "defmt-rtt",
+ "embedded-hal 1.0.0",
+ "panic-halt",
+ "rp235x-hal",
+]
+
+[[package]]
 name = "embedded-hal-nb"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -748,10 +739,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
-name = "extra-features"
+name = "fine-motor-control"
 version = "0.0.1"
 dependencies = [
- "async-embassy",
  "cortex-m-rt",
  "cyw43",
  "cyw43-pio",
@@ -764,6 +754,7 @@ dependencies = [
  "embassy-sync",
  "embassy-time",
  "heapless",
+ "minimal-async-pot",
  "panic-probe",
  "reqwless",
  "static_cell",
@@ -941,16 +932,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hal-basics"
-version = "0.0.1"
-dependencies = [
- "defmt-rtt",
- "embedded-hal 1.0.0",
- "panic-halt",
- "rp235x-hal",
-]
-
-[[package]]
 name = "half"
 version = "2.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1120,6 +1101,29 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 
 [[package]]
+name = "making-sensors"
+version = "0.0.1"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embedded-hal-basics",
+ "heapless",
+ "minimal-async-pot",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
+
+[[package]]
 name = "managed"
 version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1130,6 +1134,25 @@ name = "memchr"
 version = "2.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "78ca9ab1a0babb1e7d5695e3530886289c18cf2f87ec19a575a0abdce112e3a3"
+
+[[package]]
+name = "minimal-async-pot"
+version = "0.0.1"
+dependencies = [
+ "cortex-m-rt",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "embassy-usb",
+ "embedded-io",
+ "heapless",
+ "num-traits",
+ "panic-probe",
+ "static_cell",
+]
 
 [[package]]
 name = "nb"
@@ -1145,6 +1168,28 @@ name = "nb"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8d5439c4ad607c3c23abf66de8c8bf57ba8adcd1f129e699851a6e43935d339d"
+
+[[package]]
+name = "network-connectivity"
+version = "0.0.1"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "heapless",
+ "minimal-async-pot",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
 
 [[package]]
 name = "new_debug_unreachable"
@@ -1212,6 +1257,28 @@ name = "once_cell"
 version = "1.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
+
+[[package]]
+name = "optimising-performance"
+version = "0.0.1"
+dependencies = [
+ "cortex-m-rt",
+ "cyw43",
+ "cyw43-pio",
+ "defmt 1.0.1",
+ "defmt-rtt",
+ "embassy-executor",
+ "embassy-futures",
+ "embassy-net",
+ "embassy-rp",
+ "embassy-sync",
+ "embassy-time",
+ "heapless",
+ "minimal-async-pot",
+ "panic-probe",
+ "reqwless",
+ "static_cell",
+]
 
 [[package]]
 name = "panic-halt"

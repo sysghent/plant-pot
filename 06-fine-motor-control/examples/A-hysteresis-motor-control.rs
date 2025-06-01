@@ -9,7 +9,6 @@
 #![no_std]
 #![no_main]
 
-use async_embassy::usb::BasicUsbSetup;
 use defmt::info;
 use defmt_rtt as _;
 use embassy_rp::{
@@ -18,6 +17,7 @@ use embassy_rp::{
     pio::InterruptHandler,
 };
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
+use minimal_async_pot::usb::BasicUsbSetup;
 use panic_probe as _;
 
 bind_interrupts!(

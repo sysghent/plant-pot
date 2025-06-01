@@ -40,3 +40,13 @@ After the workshop, you will still need to do some small steps to finish the pro
 - Provide a waterproof case for the electronics
 - Provide battery power (optional)
 - Buy water tubes in Brico
+
+## Workshop
+
+Fill in the `todo` items in the different sections of the code.
+
+To check if your code compiles, you can run:
+
+```bash
+cargo clippy --examples
+```

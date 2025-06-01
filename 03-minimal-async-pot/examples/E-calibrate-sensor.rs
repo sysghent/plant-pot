@@ -9,13 +9,12 @@
 //! Use this to make a formula that transforms the ADC value into a humidity
 //! value.
 //!
-//! This step is similar to the `map` function in ArduinoIDE. It is just a
+//! This step is similar to the `map` function in `ArduinoIDE`. It is just a
 //! linear transformation.
 
 #![no_std]
 #![no_main]
 
-use async_embassy::usb::BasicUsbSetup;
 use cortex_m_rt as _;
 use defmt_rtt as _;
 use embassy_executor::{Spawner, main};
@@ -30,6 +29,7 @@ use embassy_rp::{
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
 use embassy_time::{Duration, Ticker};
 use embedded_io::Write;
+use minimal_async_pot::usb::BasicUsbSetup;
 use num_traits::float::FloatCore;
 use panic_probe as _;
 

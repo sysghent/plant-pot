@@ -1,5 +1,12 @@
 [workspace]
-members = ["02-hal-basics", "03-async-embassy", "04-extra-features"]
+members = [
+    "02-embedded-hal-basics",
+    "03-minimal-async-pot",
+    "04-making-sensors",
+    "05-network-connectivity",
+    "06-fine-motor-control",
+    "07-optimising-performance",
+]
 package.authors = ["Willem Vanhulle <willemvanhulle@protonmail.com>"]
 package.edition = "2024"
 package.homepage = "https://sysghent.be"

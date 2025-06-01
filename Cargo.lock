@@ -743,21 +743,13 @@ name = "fine-motor-control"
 version = "0.0.1"
 dependencies = [
  "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
  "embassy-sync",
- "embassy-time",
- "heapless",
  "minimal-async-pot",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -1104,23 +1096,11 @@ checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 name = "making-sensors-probes"
 version = "0.0.1"
 dependencies = [
- "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
- "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
  "embassy-time",
- "embedded-hal-basics",
- "heapless",
- "minimal-async-pot",
  "panic-probe",
- "reqwless",
- "static_cell",
 ]
 
 [[package]]
@@ -1179,13 +1159,11 @@ dependencies = [
  "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
- "embassy-futures",
  "embassy-net",
  "embassy-rp",
  "embassy-sync",
  "embassy-time",
  "heapless",
- "minimal-async-pot",
  "panic-probe",
  "reqwless",
  "static_cell",
@@ -1262,21 +1240,11 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 name = "optimising-performance"
 version = "0.0.1"
 dependencies = [
- "cortex-m-rt",
- "cyw43",
- "cyw43-pio",
- "defmt 1.0.1",
  "defmt-rtt",
  "embassy-executor",
  "embassy-futures",
- "embassy-net",
  "embassy-rp",
- "embassy-sync",
- "embassy-time",
- "heapless",
- "minimal-async-pot",
  "panic-probe",
- "reqwless",
  "static_cell",
 ]
 

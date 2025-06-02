@@ -8,7 +8,7 @@
 //! updating `memory.x` ensures a rebuild of the application with the
 //! new memory settings.
 
-use std::{env, fs::File, io::Write, path::PathBuf};
+use std::{fs::File, io::Write, path::PathBuf};
 
 fn main() {
     // Put the linker script somewhere the linker can find it

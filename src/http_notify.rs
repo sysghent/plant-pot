@@ -22,7 +22,7 @@ pub async fn notify_http(net_stack: &mut embassy_net::Stack<'_>, message: &str) 
     let response = client
         .request(
             reqwless::request::Method::POST,
-            "http://ntfy.sh/smart-plant-pot",
+            "https://ntfy.sh/smart-plant-pot",
         )
         .await
         .unwrap()

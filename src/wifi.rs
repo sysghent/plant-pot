@@ -32,8 +32,8 @@ impl BasicWiFi {
     ) -> NetStackControl {
         static RADIO_STATE: StaticCell<cyw43::State> = StaticCell::new();
         static STACK_RESOURCES: StaticCell<StackResources<3>> = StaticCell::new();
-        let fw = include_bytes!("../wifi-firmware/43439A0.bin");
-        let clm = include_bytes!("../wifi-firmware/43439A0_clm.bin");
+        let fw = include_bytes!("../wifi-cyw43-firmware/43439A0.bin");
+        let clm = include_bytes!("../wifi-cyw43-firmware/43439A0_clm.bin");
 
         let BasicWiFi {
             pio,

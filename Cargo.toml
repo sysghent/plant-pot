@@ -1,25 +1,18 @@
-[workspace]
-members = [
-    "02-embedded-hal-basics",
-    "03-minimal-async-pot",
-    "04-making-sensors-probes",
-    "05-network-connectivity",
-    "06-fine-motor-control",
-    "07-optimising-performance",
-]
-package.authors = ["Willem Vanhulle <willemvanhulle@protonmail.com>"]
-package.edition = "2024"
-package.homepage = "https://sysghent.be"
-package.license = "MIT"
-package.repository = "https://github.com/sysghent/plant-pot"
-package.version = "0.0.1"
-resolver = "3"
+[package]
+authors = ["Willem Vanhulle <willemvanhulle@protonmail.com>"]
+edition = "2024"
+homepage = "https://sysghent.be"
+license = "MIT"
+name = "plant-pot"
+repository = "https://github.com/sysghent/plant-pot"
+version = "0.0.1"
+
 
 [profile.dev]
 debug = 2
 opt-level = 0
 
-[workspace.lints]
+[lints]
 clippy.cast-precision-loss = "allow"
 clippy.diverging-sub-expression = "allow"
 clippy.missing-panics-doc = "allow"
@@ -30,7 +23,7 @@ clippy.used-underscore-binding = "allow"
 rust.dead-code = "allow"
 rust.unreachable-code = "allow"
 
-[workspace.dependencies]
+[dependencies]
 cortex-m-rt = { version = "0.7.5" }
 cyw43 = { version = "0.3.0", features = ["defmt", "firmware-logs"] }
 cyw43-pio = { version = "0.4.0", features = ["defmt"] }
@@ -47,6 +40,8 @@ embassy-net = { version = "0.7.0", features = [
     "proto-ipv4",
     "dns",
     "tcp",
+    "udp",
+    "medium-ethernet",
     "medium-ip",
     "dhcpv4",
     "defmt",
@@ -59,14 +54,16 @@ embassy-rp = { version = "0.4.0", features = [
     "rp235xa",
     "binary-info",
 ] }
-embassy-rp-io = { path = "embassy-rp-io" }
 embassy-sync = { version = "0.6.2", features = ["defmt"] }
 embassy-time = { version = "0.4.0", features = [
     "defmt",
     "defmt-timestamp-uptime",
 ] }
 embassy-usb = { version = "0.4.0", features = ["defmt"] }
+embassy-usb-logger = "0.4.0"
+embedded-io = "0.6.1"
 heapless = "0.8.0"
+log = "0.4.27"
 num-traits = { version = "0.2.19", default-features = false }
 panic-halt = { version = "1.0.0" }
 panic-probe = { version = "0.3", features = ["print-defmt"] }

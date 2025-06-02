@@ -74,3 +74,9 @@ Or, in case you have `Embed.toml` set up, you can use the `cargo-embed` tool to 
 [target.thumbv8m.main-none-eabihf]
 runner = "cargo embed"
 ```
+
+## TODO verification
+
+```bash
+sudo picotool info -a 
+```

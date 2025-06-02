@@ -58,7 +58,7 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    let mut led_pin = pins.gpio25.into_push_pull_output();
+    let mut led_pin = pins.gpio16.into_push_pull_output();
 
     let mut timer = hal::Timer::new_timer0(pac.TIMER0, &mut pac.RESETS, &clocks);
 

@@ -6,12 +6,10 @@ pkgs.mkShell {
 
   buildInputs = with pkgs; [
     cargo-binutils # For `cargo objdump` and `cargo size`
-    clang_19
-    elf2uf2-rs # If your device uses UF2 files for flashing.
     gdb
     minicom
     openocd
-    picotool # In case you want to use offical Raspberry Pi tools
+    picotool
     probe-rs-tools
     rustup
     tio # For reading serial output

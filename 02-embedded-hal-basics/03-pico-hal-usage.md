@@ -17,9 +17,7 @@ fn main() -> ! {
 }
 ```
 
-You don't need a dependency on `cortex-m-rt`.
-
-However, later on, in Embassy examples, you will see it is actually necessary.
+You don't need a dependency on `cortex-m-rt` in this crate.
 
 ## Compilation
 

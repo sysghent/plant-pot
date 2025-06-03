@@ -47,6 +47,6 @@ rustflags = [
 
 
 [env]
-DEFMT_LOG = "debug"                # In case you use a hardware debugger.
-PASSWORD = "claim-exclusive-bring" # WiFi password
-SSID = "Willem"                    # WiFi SSID
+DEFMT_LOG = "debug" # In case you use a hardware debugger.
+PASSWORD = "?"      # WiFi password
+SSID = "?"          # WiFi SSID

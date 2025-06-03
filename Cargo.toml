@@ -59,12 +59,12 @@ embassy-time = { version = "0.4.0", features = [
     "defmt-timestamp-uptime",
 ] }
 embassy-usb = { version = "0.4.0", features = ["defmt"] }
-# embassy-usb-logger = "0.4.0"
+
 embedded-io = "0.6.1"
 heapless = "0.8.0"
-log = "0.4.27"
 num-traits = { version = "0.2.19", default-features = false }
 panic-halt = { version = "1.0.0" }
 panic-probe = { version = "0.3", features = ["print-defmt"] }
+rand_core = { version = "0.9.3", features = ["os_rng"] }
 reqwless = { version = "0.13.0", default-features = false }
 static_cell = { version = "2.1.0" }

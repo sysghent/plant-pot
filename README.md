@@ -290,13 +290,13 @@ Provide power to the target Pico 2 W (through the debug probe) by connecting the
 
 ### Laptop setup
 
-1. Install `cargo-embed` through the `probe-rs` tools suite.
+1. Install `cargo-embed`, which is included in the `probe-rs` tools suite.
 
     ```bash
     cargo install probe-rs-tools
     ```
 
-2. Verify that `cargo-embed` is available in your shell's `PATH`:
+2. Verify that `cargo-embed` is available in your shell's `PATH` (cargo-[CMD] can be called with `cargo [CMD]`):
 
     ```bash
     cargo embed --version

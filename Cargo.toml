@@ -34,14 +34,13 @@ embassy-executor = { version = "0.7", features = [
     "executor-thread",
     "defmt",
     "executor-interrupt",
+    "task-arena-size-327680",
 ] }
 embassy-futures = { version = "0.1.1" }
 embassy-net = { version = "0.7.0", features = [
     "proto-ipv4",
     "dns",
     "tcp",
-    "udp",
-    "medium-ethernet",
     "medium-ip",
     "dhcpv4",
     "defmt",
@@ -60,7 +59,7 @@ embassy-time = { version = "0.4.0", features = [
     "defmt-timestamp-uptime",
 ] }
 embassy-usb = { version = "0.4.0", features = ["defmt"] }
-embassy-usb-logger = "0.4.0"
+# embassy-usb-logger = "0.4.0"
 embedded-io = "0.6.1"
 heapless = "0.8.0"
 log = "0.4.27"

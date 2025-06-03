@@ -55,7 +55,7 @@ continue  # Continue execution until the breakpoint is hit
 If your debugging session loops forever, you might have jumped too far in the program before the program was halted at a breakpoint. In that case you have to reset the program with:
 
 ```gdb
-monitor reset # Or maybe `monitor reset halt`
+monitor reset halt
 ```
 
 ## VS Code

@@ -1,11 +1,15 @@
+[default.probe]
+protocol = "Swd"
+
 [default.general]
 chip = "rp235x"
-
-[default.reset]
-halt_afterwards = true
 
 [default.rtt]
 enabled = true
 
 [default.gdb]
 enabled = true
+
+[default.reset]
+enabled = true
+halt_afterwards = true

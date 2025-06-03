@@ -5,16 +5,18 @@
 #![no_std]
 #![no_main]
 
-use defmt::{info, panic, unwrap};
+use defmt::{info, panic};
 use embassy_executor::Spawner;
 use embassy_rp::bind_interrupts;
 use embassy_rp::config::Config;
 use embassy_rp::peripherals::USB;
 use embassy_rp::usb::{Driver, Instance, InterruptHandler};
-use embassy_usb::UsbDevice;
-use embassy_usb::class::cdc_acm::{CdcAcmClass, State};
+use embassy_usb::class::cdc_acm::CdcAcmClass;
 use embassy_usb::driver::EndpointError;
-use static_cell::StaticCell;
+use heapless::String;
+use plant_pot::usb::BasicUsbSetup;
+
+use embedded_io::Write;
 use {defmt_rtt as _, panic_probe as _};
 
 bind_interrupts!(struct Irqs {
@@ -26,22 +28,20 @@ async fn main(spawner: Spawner) {
     info!("Hello there!");
 
     let p = embassy_rp::init(Config::default());
-
-    // Do stuff with the class!
-    loop {
-        class.wait_connection().await;
-        info!("Connected");
-        let _ = echo(&mut class).await;
-        info!("Disconnected");
-    }
-}
-
-type MyUsbDriver = Driver<'static, USB>;
-type MyUsbDevice = UsbDevice<'static, MyUsbDriver>;
-
-#[embassy_executor::task]
-async fn usb_task(mut usb: MyUsbDevice) -> ! {
-    usb.run().await
+    BasicUsbSetup::new(p.USB, Irqs)
+        .process(
+            async |in_buffer, mut out_buffer| {
+                let reversed_string: String<64> = core::str::from_utf8(in_buffer)
+                    .unwrap_or("Invalid UTF-8")
+                    .chars()
+                    .rev()
+                    .collect();
+                info!("Received: {:?}", reversed_string);
+                write!(out_buffer, "{:?}", reversed_string.as_bytes()).unwrap();
+            },
+            spawner,
+        )
+        .await
 }
 
 struct Disconnected {}

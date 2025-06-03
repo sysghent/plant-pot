@@ -230,6 +230,12 @@ Preparation for serial IO:
     tio /dev/serial/by-id/usb-c0de_USB-serial_example-if00
     ```
 
+5. If you are not able to connect, you can try different parameters for the serial connection or a different device path.
+
+    ```bash
+    tio -s 1 -d 8 -p none -b 9600 /dev/ttyACM1
+    ```
+
 From now on, you can send bytes to the Pico and also receive bytes from the Pico. All keyboard commands for `tio` are listed in [GitHub](https://github.com/tio/tio#32-key-commands). The most important one is `ctrl-t q` to quit the serial monitor.
 
 Try it out by running one of the official Embassy examples:
@@ -240,18 +246,18 @@ cargo run --example serial-echo
 
 Every time you finish a line by pressing `Enter`, the Pico will echo back the line you typed. This is a good way to test if the serial connection is working correctly.
 
-The core of this functionality is in:
+The core of this functionality is in [`src/usb.rs`](src/usb.rs):
 
 ```rust
-async fn echo<'d, T: Instance + 'd>(
-    class: &mut CdcAcmClass<'d, Driver<'d, T>>,
-) -> Result<(), Disconnected> {
-    let mut buf = [0; 64];
-    loop {
-        let n = class.read_packet(&mut buf).await?;
-        let data = &buf[..n];
-        info!("data: {:x}", data);
-        class.write_packet(data).await?;
+loop {
+    match usb_io_handle.read_packet(&mut serial_in_buf).await {
+        Ok(n) => {
+            process(&serial_in_buf[0..n], &mut serial_out_buf).await;
+            let _ = usb_io_handle.write_packet(&serial_out_buf).await;
+            serial_in_buf.fill(0);
+            serial_out_buf.fill(0);
+        }
+        Err(_) => todo!("Handle USB read error"),
     }
 }
 ```
@@ -262,33 +268,55 @@ This asynchronous function takes a handle to the USB port and reads data from it
 
 ## Using a hardware debugger
 
-### Hardware probe setup
+We will configure one Pico to act as a hardware debugging probe for another Pico, using the SWD protocol. This allows you to debug the code running on the target Pico using GDB or other debugging tools.
 
-Download flash image for the hardware debugger from the official [`picprobe` releases](https://github.com/raspberrypi/debugprobe/releases).
+### Flashing a `picoprobe`
 
-In this workshop, we are only using Pico 2 W boards, so download the file `debugprobe_on_pico2.uf2`. Connect the probe that you want to convert into a debug probe in BOOTSEL mode over USB with your laptop. Drop the downloaded `uf2` file on to the mounter Pico drive. This will flash the `picoprobe` firmware onto the Pico board.
+The Raspberry foundation provides images for the Pico's that can be flashed to turn a Pico into a hardware debugging mode.
 
-Let's say D is the debug Pico 2 W and T is the target Pico 2 W.
+1. Download the latest `debugprobe_on_pico2.uf2` flash image from the official [`picprobe`](https://github.com/raspberrypi/debugprobe/releases) releases.
 
-1. Take the side with the white socket (JST PH 3-pin) of the  "JST PH 3-Pin to Male Header Cable". Plug it into the SWD socket of the target Pico 2 W (the one you want to debug).
-2. Turn both devices with USB ports facing upwards (to prevent confusion).
-3. The three male header pins should be connected to the debug probe Pico 2 W as follows:
-   - Pin 1 (left, yellow) -> T p5
-   - Pin 2 (middle, black) -> T p3
-   - Pin 3 (right, orange) -> T p4
+2. Attach the Pico to your laptop while holding the white BOOTSEL mode.
+
+3. Drop the downloaded `uf2` file on the mass storage drive emulated by the Pico. Wait for a fraction of a second while the Pico unmounts.
+
+Now you have successfully made a cheap hardware debugging probe.
+
+We still need to wire this homemade probe to the target Pico that we want to debug.
+
+- Assume **D** is the homemade debug probe (a Pico).
+- Assume **T** is the target Pico.
+
+### SWD wiring
+
+Right now, there is no cabling yet between the debug probe and the target Pico. The cables should be connected such that **D** can detect **T** over the SWD debugging protocol.
+
+1. Find the cable that has a tiny white connector on one side (JST PH 3-pin) and three male jumber cables on the other side.
+
+2. Plug the white connector of the JST cable into the SWD socket of **D**.
+
+Place **T** and **D** in parallel  with USB ports facing upwards (to prevent confusion).
+
+The three male header pins should be connected to **D** as follows:
+
+- **T** left (yellow) <-> **D** pin n. 5
+- **T** middle (black) <-> **D** pin n. 3
+- **T** right (orange) <-> **D** pin n. 4
 
 Instead of pin number, you can als use the pin names:
 
-T SWCLK <-> D GP3
-T SWDIO <-> D GP2
-T GND <-> D GND
+- **T** SWCLK <-> **D** GP3
+- **T** SWDIO <-> **D** GP2
+- **T** GND <-> **D** GND
 
-Provide power to the target Pico 2 W (through the debug probe) by connecting the following pins:
+Provide power to **T** with only one USB cable by forwarding it from the power of **D**:
 
-- T p38 <-> D p38 (connect ground)
-- T p39 <-> D p39 (connect power supply)
+- **T** GND pin n. 38 <-> **D** pin n. 38 (connect ground)
+- **T** VSYS pin n. 39 <-> **D** pin n. 39 (connect power supply)
 
-### Laptop setup
+_Remark: You can also connect **T** to **D** for UART communication. Exercise: find out if this is really necessary and let me know._
+
+### Development setup
 
 1. Install `cargo-embed`, which is included in the `probe-rs` tools suite.
 
@@ -327,7 +355,7 @@ halt_afterwards = true
 You can now flash the target Pico 2 W by running:
 
 ```bash
-cargo embed --example serial-echo
+cargo embed --example on-board-blink
 ```
 
 With this command, it is not necessary anymore to hold the "BOOTSEL" button while plugging in the target Pico 2 W. The `cargo embed` command will automatically flash the program to the target Pico 2 W.
@@ -342,9 +370,95 @@ runner = "cargo embed --chip RP235x"
 Now you can just use a shorter command (and prevent problems caused by  re-plugging) to compile and flash in one step:
 
 ```bash
-cargo run --example serial-echo
+cargo run --example on-board-blink
 ```
+
+## Using RTT for logging
+
+RTT (Real-Time Transfer) is a logging protocol that can be used on top of an SWD connection.
+
+Import the `defmt` crate to add log statemens throughout your code. Just import macro's such as `defmt::info!`, `defmt::error!`, and `defmt::warn!` to log messages, similar to how you would use `log::info!` in standard Rust.
+
+Then you have to enable a "transport" for `defmt` which is usally `RTT`, implemented by linking your code with the `defmt-rtt` crate.
+
+- Add `defmt-rtt` to your `Cargo.toml` file:
+- Add a compiler flag to your `.cargo/config.toml` file: `-C link-arg=-Tdefmt.x`.
+
+## Breakpoints
+
+First, build your binary. Prevent lines being merged or re-ordered during the process of optimisation. This process can make it harder for the debugger to stop at the right breakpoints. Add the following to your `Cargo.toml`:
+
+```toml
+[profile.dev]
+debug = 2
+opt-level = 0
+```
+
+To be sure the new configuration is used, you can reset the `target` build cache:
+
+```bash
+cargo clean
+cargo build --example [BINARY_EXAMPLE_NAME]
+```
+
+Install the multi-architecture version of `gdb` to be able to debug the Raspberry Pi Pico board:
+
+```bash
+sudo apt-get install gdb-multiarch
+```
+
+The exact binary name may vary, but it is important that the installed `gdb` supports the architecture of your target chip. In the case of a Pico 2, `gdb` needs `ARM` support built-in.
+
+Then run the following command to create and connect a `gdb` debugging client:
+
+```bash
+gdb-multiarch target/thumbv8m-none-eabi/debug/[BINARY_EXAMPLE_NAME]
+```
+
+Within the `gdb` client on your laptop, you have to connect to the running `GDB` server on the debug Pico:
+
+```gdb
+target remote :1337
+monitor reset halt # optionally resets to the first instruction
+```
+
+Breakpoints can be set in the `gdb` client by using the `break` command followed by a line number or function name:
+
+```gdb
+break [FUNCTION_NAME]  # Set a breakpoint at a specific function
+break [LINE_NUMBER]  # Set a breakpoint at a specific line number
+break [FILE_NAME]:[LINE_NUMBER]  # Set a breakpoint at a specific line in a file
+```
+
+You can also write hardware breakpoints directly in your code with `cortex_m::asm::bkpt()`.
+
+To progress throughout the execution of your debugged program you can use:
+
+```gdb
+continue  # Continue execution until the next breakpoint is hit
+next # Step to the next line of code
+```
+
+_Remark: In VS Code, you can install the `probe-rs-debug` extension to use the `probe-rs` debugger._
 
 ## HTTP notifications
 
 The setup of HTTP communication in Rust is more difficult than in MicroPython. On the other hand, it is more powerful and flexible.
+
+1. Make an account on [Ntfy](https://docs.ntfy.sh).
+
+2. Install the mobile Ntfy app on your phone (optional) or use another platform to receive notifications.
+
+3. Try publishing a notification from you command line using `curl`:
+
+    ```bash
+    curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
+    ```
+
+Instead of using `curl` you can also use your Pico to send notifications.
+
+```bash
+cargo embed --example http-notifications
+```
+
+> **Exercise**: Make the messages emitted to `ntfy` by the Pico prettier or more informative (e. g. containing some numerical data).

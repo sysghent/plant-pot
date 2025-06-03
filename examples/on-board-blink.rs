@@ -5,6 +5,7 @@
 #![no_std]
 #![no_main]
 
+use defmt::info;
 use embassy_executor::Spawner;
 use embassy_rp::config::Config;
 use embassy_rp::peripherals::{DMA_CH0, PIO0};

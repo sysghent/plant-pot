@@ -11,9 +11,8 @@ use embassy_rp::{
     pio::{Instance, InterruptHandler, Pio},
 };
 use embassy_time::{Duration, Timer};
-use rand_core::block::BlockRng64;
+use rand_core::RngCore;
 use static_cell::StaticCell;
-
 const SSID: &str = env!("SSID");
 const PASSWORD: &str = env!("PASSWORD");
 
@@ -122,7 +121,7 @@ impl EasyWifi {
         info!("Creating DHCP configuration.");
         let dhcp_config = embassy_net::Config::dhcpv4(DhcpConfig::default());
 
-        let seed = RoscRng::next_u64();
+        let seed = RoscRng.next_u64();
 
         info!("Creating network stack.");
         let (net_stack, net_stack_runner) = embassy_net::new(

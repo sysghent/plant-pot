@@ -1,6 +1,6 @@
 # Workshop: make a smart plant pot
 
-Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025. Register on [Mobilizon](https://mobilizon.be/events/3babf471-434d-431c-972c-b0bbae57b64c).
+Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025 for [SysGhent](https://sysghent.be/events/plant-pot). Register on [Mobilizon](https://mobilizon.be/events/3babf471-434d-431c-972c-b0bbae57b64c).
 
 In this workshop you will learn how to create a plant pot that can automatically add water to itself when the moisture of the earth in the pot is too dry.
 
@@ -79,7 +79,7 @@ Next, you need to install Rust and add some exceptions to your `udev` rules to b
     rustup target add thumbv8m.main-none-eabihf
     ```
 
-4. Install `picotool` to flash the Raspberry Pico (in BOOTSEL mode).
+4. Install `picotool` to flash the Raspberry Pico (in BOOTSEL mode). Debian / Ubuntu and Nix have `picotool` in their repositories. If you are using another type of Linux distribution, you will have to compile [from source](https://github.com/raspberrypi/picotool).
 
     ```bash
     sudo apt install picotool
@@ -206,6 +206,12 @@ use defmt_rtt as _;
 use embassy_executor::{Spawner, main};
 use embassy_rp::config::Config;
 use panic_probe as _;
+use embassy_rp::bind_interrupts;
+
+
+bind_interrupts!(struct Irqs {
+    PIO0_IRQ_0 => InterruptHandler<PIO0>;
+});
 
 #[main]
 async fn main(_spawner: Spawner) -> ! {
@@ -223,6 +229,12 @@ Then there are two `use x as _;` lines. These crates don't expose functions or p
 - The `panic_probe` crate provides a panic handler that is compatible with Embassy.  Panics are **fatal errors**. Every embedded program needs a panic handler, because traditional panics would unwind or abort and yield control back to the operating system. This operating system is absent, so we have to tell the compiler how to handle panics. Usually, this means going in an infinite loop.
 
 - The `defmt_rtt` is not useful for the moment, but once you have configured a hardware debugger, it will allow you to log messages to the debugger console. This is useful for debugging your program.
+
+There is a macro-call `embassy_rp::bind_interrupts!` that binds hardware interrupts with the Embassy framework. This is necessary to be able to use hardware interrupts in your program. Hardware interrupts can stop the current ongoing computation and jump execution to some handler code elsewhere. Examples of hardware interrupt bindings available on the Pico 2 are:
+
+- `PIO0_IRQ_0` is an interrupt coming from the PIO peripheral.
+- `USBCTRL_IRQ` for USB interrupts (relevant in USB serial communication).
+- `ADC_IRQ_FIFO` for ADC interrupts (relevant for reading data from the analogue-to-digital converter in the moisture sensor).
 
 The `spawner` argument allows users to spawn asynchronous tasks. Keep in mind, however, that each task should be non-generic and completely specified at compile time. This is because the Embassy framework does not support dynamic task creation at runtime.
 
@@ -305,6 +317,16 @@ From now on, you need to have a moisture sensor connected to the Raspberry Pico.
 A microcontroller is not continuously powered, but turns millions of times per second (CPU clock cycles). This means that we cannot really have a continuous measurement of the moisture in the soil. Instead, it is a discrete measurement that we can take at regular intervals.
 
 We have to use the ADC (Analog-to-Digital Converter) of the Raspberry Pico to measure the moisture in the soil. The ADC converts the analog signal from the moisture sensor into a digital value that can be processed by the microcontroller.
+
+The typical workflow of using the ADC is as follows (assuming we measure the moisture on GPIO pin 26):
+
+```rust
+let adc_component = Adc::new(p.ADC, Irqs, Config::default());
+let moisture_adc_channel = Channel::new_pin(p.PIN_26, Pull::None);
+let level = adc_component.read(&mut moisture_adc_channel).await.unwrap();
+```
+
+Notice you need to instantiate the `Adc` component first, which is a handle to the ADC hardware on the Raspberry Pico. Then you need to create a `Channel` that represents the pin you want to use for reading the moisture sensor.
 
 > **Exercise**: Find all the pins on the Pico that can be used as ADC inputs.
 
@@ -451,13 +473,13 @@ cargo run --example http-notifications
 
 ## Levels of abstraction in embedded Rust
 
-Writing programs for microcontrollers can be done at different levels of abstraction.
+This section  provides an overview of the different levels of abstraction that can be used when programming microcontrollers in Rust (or other languages).
 
 ### Low level
 
 The lowest level of abstraction for software running on a microcontroller, is the MCU. The MCU enables access to the core processor. See [Cortex-M](https://crates.io/crates/cortex-m).
 
-On top of the MCU, there always is a "peripheral access crate" (the PAC). This crate contains code generated from SVD files provided by the board manifacturer. See the [RP-PAC](https://crates.io/crates/rp235x-pac)
+On top of the MCU, there always is a "peripheral access crate" (the PAC). This crate contains code generated from SVD files provided by the board manifacturer. See the [RP235X-PAC](https://crates.io/crates/rp235x-pac)
 
 The Embassy framework builts on top of the PAC to provide a more intuitive / convenient API for accessing the hardware.
 
@@ -467,7 +489,7 @@ In case you feel like the Embassy framework does not allow you do certaint thing
 
 The "hardware access layer" (HAL) is a more convenient way to access the hardware of the microcontroller. It provides a higher level of abstraction than the PAC, but still allows you to access the hardware directly.
 
-See [rp235x-hal](https://crates.io/crates/rp235x-hal) and [examples](https://github.com/rp-rs/rp-hal/tree/main/rp235x-hal-examples).
+The Pico 2 has [rp235x-hal](https://crates.io/crates/rp235x-hal) as a HAL crate. You can view the [examples](https://github.com/rp-rs/rp-hal/tree/main/rp235x-hal-examples), which were used to make this workshop.
 
 _Remark: If you want to be able to **kill async tasks**, you should not use Embassy, but instead use [RTIC](https://github.com/rtic-rs/rtic) which allow pre-emptive killing of running tasks. You can also assign priorities to different tasks, which may be required for sensitive applications. However, it is not yet stable._
 
@@ -619,7 +641,7 @@ Now you can flash with `cargo run`, in exactly the same way as done previously (
 cargo run --example on-board-blink
 ```
 
-## Using RTT for logging
+### Using RTT for logging
 
 RTT (Real-Time Transfer) is a logging protocol that can be used on top of an SWD connection.
 
@@ -674,7 +696,7 @@ Then you have to enable a "transport" for `defmt` which is usally `RTT`, impleme
 
     This should open an RTT console that shows the log messages emitted by the `defmt::info!` statements in your code.
 
-## Starting a debugging session
+### Starting a debugging session
 
  Prevent lines being merged or re-ordered during the build step of your program. This kind of changes can make it harder for the debugger to stop at the right breakpoints. Add the following to your `Cargo.toml`:
 
@@ -721,7 +743,7 @@ monitor reset halt # optionally resets to the first instruction
 
 _Remark: In VS Code, you can install the `probe-rs-debug` extension to use the `probe-rs` toolkit for debugging. It uses some other kind of protocol than `gdb`. See [instructions](https://probe.rs/docs/tools/debugger/)_
 
-## Jumping between breakpoints
+### Jumping between breakpoints
 
 Breakpoints can be set in the `gdb` client by using the `break` command followed by a line number or function name:
 

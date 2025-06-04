@@ -16,8 +16,8 @@ target = "thumbv8m.main-none-eabihf"
 
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
 runner = "picotool load -u -v -x -t elf"
-# Change picotool to `cargo embed` once you have setup a hardware debug probe.
-# runner = "cargo embed"
+# Change picotool to `cargo embed` once you have set-up a hardware debug probe
+# runner = "cargo embed --chip RP235x"
 
 [target.thumbv8m.main-none-eabihf]
 rustflags = [

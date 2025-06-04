@@ -9,8 +9,7 @@ use embassy_rp::{
     bind_interrupts,
     config::{self},
     gpio::Pull,
-    peripherals::{PIO0, USB},
-    pio::InterruptHandler,
+    peripherals::USB,
 };
 use embassy_sync::{blocking_mutex::raw::CriticalSectionRawMutex, pubsub::PubSubChannel};
 use embassy_time::{Duration, Ticker};
@@ -25,58 +24,57 @@ async fn main(spawner: Spawner) -> ! {
 
     let adc_component = Adc::new(p.ADC, Irqs, Config::default());
 
-    let humidity_adc_channel = Channel::new_pin(p.PIN_26, Pull::None);
+    let moisture_adc_channel = Channel::new_pin(p.PIN_26, Pull::None);
 
     spawner
-        .spawn(measure_humidity(adc_component, humidity_adc_channel))
+        .spawn(measure_moisture(adc_component, moisture_adc_channel))
         .unwrap();
 
-    send_humidity_serial_usb(p.USB, spawner).await
+    send_moisture_serial_usb(p.USB, spawner).await
 }
 
 bind_interrupts!(
     pub struct Irqs {
         ADC_IRQ_FIFO => embassy_rp::adc::InterruptHandler;
         USBCTRL_IRQ => embassy_rp::usb::InterruptHandler<USB>;
-        PIO0_IRQ_0 => InterruptHandler<PIO0>;
     }
 );
 
 #[must_use]
-pub fn adc_reading_to_voltage(_adc_reading_12bit: u16) -> f32 {
+pub fn adc_reading_to_voltage(_adc_pin_input: u16) -> f32 {
     todo!("Convert ADC reading to voltage");
 }
 
 #[must_use]
-pub fn voltage_to_humidity(_voltage: f32) -> f32 {
-    todo!("Convert voltage to humidity");
+pub fn voltage_to_moisture(_voltage: f32) -> f32 {
+    todo!("Convert voltage to moisture");
 }
 
 static HUMIDITY_PUBSUB_CHANNEL: PubSubChannel<CriticalSectionRawMutex, f32, 1, 3, 1> =
     PubSubChannel::new();
 
 #[embassy_executor::task]
-pub async fn measure_humidity(mut adc: Adc<'static, Async>, mut humidity_pin: Channel<'static>) {
+pub async fn measure_moisture(mut adc: Adc<'static, Async>, mut moisture_pin: Channel<'static>) {
     let publisher = HUMIDITY_PUBSUB_CHANNEL.publisher().unwrap();
     let mut ticker: Ticker = Ticker::every(Duration::from_millis(500));
     loop {
         ticker.next().await;
-        let level = adc.read(&mut humidity_pin).await.unwrap();
+        let level = adc.read(&mut moisture_pin).await.unwrap();
         let voltage = adc_reading_to_voltage(level);
-        let humidity = voltage_to_humidity(voltage);
-        publisher.publish_immediate(humidity);
+        let moisture = voltage_to_moisture(voltage);
+        publisher.publish_immediate(moisture);
     }
 }
 
-pub async fn send_humidity_serial_usb(usb: USB, spawner: Spawner) -> ! {
-    let mut humidity_receiver = HUMIDITY_PUBSUB_CHANNEL.subscriber().unwrap();
+pub async fn send_moisture_serial_usb(usb: USB, spawner: Spawner) -> ! {
+    let mut moisture_receiver = HUMIDITY_PUBSUB_CHANNEL.subscriber().unwrap();
 
     BasicUsbSetup::new(usb, Irqs)
         .send(
             async |mut buf| {
-                let humidity = humidity_receiver.next_message_pure().await;
-                let humidity_perc = (humidity * 100.0).floor();
-                write!(buf, "Humidity: {humidity_perc} %\r\n").unwrap();
+                let moisture = moisture_receiver.next_message_pure().await;
+                let moisture_perc = (moisture * 100.0).floor();
+                write!(buf, "Humidity: {moisture_perc} %\r\n").unwrap();
             },
             spawner,
         )

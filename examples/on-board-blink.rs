@@ -1,20 +1,15 @@
-//! This example test the Pimoroni Pico Plus 2 on board LED.
-//!
-//! It does not work with the RP Pico 2 board. See `blinky.rs`.
-
 #![no_std]
 #![no_main]
 
 use defmt::info;
 use embassy_executor::Spawner;
+use embassy_rp::bind_interrupts;
 use embassy_rp::config::Config;
-use embassy_rp::peripherals::{DMA_CH0, PIO0};
-use embassy_rp::pio::{InterruptHandler, Pio};
-use embassy_rp::{bind_interrupts, gpio};
+use embassy_rp::peripherals::PIO0;
+use embassy_rp::pio::InterruptHandler;
 use embassy_time::{Duration, Timer};
-use gpio::{Level, Output};
-use plant_pot::wifi::{EasyWifi, WifiStack};
-use static_cell::StaticCell;
+use plant_pot::wifi::EasyWifi;
+
 use {defmt_rtt as _, panic_probe as _};
 
 bind_interrupts!(struct Irqs {

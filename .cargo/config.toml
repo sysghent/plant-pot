@@ -14,9 +14,7 @@ run-riscv = "run --target=riscv32imac-unknown-none-elf"
 target = "thumbv8m.main-none-eabihf"
 
 
-[target.'cfg(target_os = "none")']
-
-
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
 runner = "picotool load -u -v -x -t elf"
 # Change picotool to `cargo embed` once you have setup a hardware debug probe.
 # runner = "cargo embed"

@@ -10,9 +10,9 @@ In this workshop you will learn how to create a plant pot that can automatically
 
 Please bring:
 
-- Laptop
-- Micro-USB cable
-- Water container (e.g. a cup of water)
+- **Laptop**
+- **Micro-USB cable**
+- **Water container** (e.g. a cup of water)
 
 ### Provided
 
@@ -53,6 +53,7 @@ First, you have to configure your development environment on your laptop to be a
 
     ```bash
     sudo apt install rustup
+    rustup install stable --profile default
     ```
 
 2. Verify that `cargo` and `rustc` are available in your shell's `PATH`:
@@ -62,25 +63,19 @@ First, you have to configure your development environment on your laptop to be a
     rustc --version
     ```
 
-3. Install the Rust compiler for the architecture of your development machine. For example, if you are using a 64-bit Linux machine, run:
+3. Install compiler components for future cross-compilation:
 
     ```bash
-    rustup target add x86_64-unknown-linux-gnu
+    rustup target add thumbv8m.main-none-eabihf
     ```
 
-4. Install compiler components for future cross-compilation:
-
-    ```bash
-    rustup target add thumbv8m.main-none-eabihf riscv32imac-unknown-none-elf
-    ```
-
-5. Install `picotool` to flash the Raspberry Pico.
+4. Install `picotool` to flash the Raspberry Pico.
 
     ```bash
     sudo apt install picotool
     ```
 
-6. Update your `udev` rules to allow flashing without root privileges:
+5. Update your `udev` rules to allow flashing without root privileges:
 
     ```bash
     sudo curl --output /etc/udev/rules.d/99-picotool.rules "https://github.com/raspberrypi/picotool/tree/master/udev/99-picotool.rules"
@@ -212,13 +207,19 @@ Preparation for serial IO:
 
     Log out and log back in to apply the changes.
 
-2. Install the `tio` tool to be able to read the serial output of the Raspberry Pico:
+2. Run the serial echo example:
+
+    ```bash
+    cargo run --example serial-echo
+    ```
+
+3. Install the `tio` tool to be able to read the serial output of the Raspberry Pico:
 
     ```bash
     sudo apt install tio
     ```
 
-3. List serial devices with `tio` (if you receive a "permission denied" error, you may need to re-login or reboot first). Look for the section _by-id_, which is more stable than the _by-path_ section:
+4. List serial devices with `tio` (if you receive a "permission denied" error, you may need to re-login or reboot first). Look for the section _by-id_, which is more stable than the _by-path_ section:
 
     ```bash
     tio --list
@@ -230,7 +231,7 @@ Preparation for serial IO:
     tio /dev/serial/by-id/usb-c0de_USB-serial_example-if00
     ```
 
-5. If you are not able to connect, you can try different parameters for the serial connection or a different device path.
+6. If you are not able to connect, you can try different parameters for the serial connection or a different device path.
 
     ```bash
     tio -s 1 -d 8 -p none -b 9600 /dev/ttyACM1
@@ -240,13 +241,9 @@ From now on, you can send bytes to the Pico and also receive bytes from the Pico
 
 Try it out by running one of the official Embassy examples:
 
-```bash
-cargo run --example serial-echo
-```
-
 Every time you finish a line by pressing `Enter`, the Pico will echo back the line you typed. This is a good way to test if the serial connection is working correctly.
 
-The core of this functionality is in [`src/usb.rs`](src/usb.rs):
+The serial-over-usb functionality is placed inside the Rust library of this repository, in the file [`src/usb.rs`](src/usb.rs):
 
 ```rust
 loop {
@@ -265,6 +262,28 @@ loop {
 This asynchronous function takes a handle to the USB port and reads data from it. It then writes the same data back to the USB port, effectively echoing it back to the sender.
 
 > **Exercise**: Implement a program that runs on your Pico and reverses every line sent from your laptop.
+
+## HTTP notifications
+
+The setup of HTTP communication in Rust is more difficult than in MicroPython. On the other hand, it is more powerful and flexible.
+
+1. Make an account on [Ntfy](https://docs.ntfy.sh).
+
+2. Install the mobile Ntfy app on your phone (optional) or use another platform to receive notifications.
+
+3. Try publishing a notification from you command line using `curl`:
+
+    ```bash
+    curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
+    ```
+
+Instead of using `curl` you can also use your Pico to send notifications.
+
+```bash
+cargo run --example http-notifications
+```
+
+> **Exercise**: Make the messages emitted to `ntfy` by the Pico prettier or more informative (e. g. containing some numerical data).
 
 ## Using a hardware debugger
 
@@ -379,7 +398,7 @@ RTT (Real-Time Transfer) is a logging protocol that can be used on top of an SWD
 
 Import the `defmt` crate to add log statemens throughout your code. Just import macro's such as `defmt::info!`, `defmt::error!`, and `defmt::warn!` to log messages, similar to how you would use `log::info!` in standard Rust.
 
-Then you have to enable a "transport" for `defmt` which is usally `RTT`, implemented by linking your code with the `defmt-rtt` crate.
+Then you have to enable a "transport" for `defmt` which is usally `RTT`, implemented by linking your code with the `defmt-rtt` crate. `defmt-rtt` is the analogue of the
 
 - Add `defmt-rtt` to your `Cargo.toml` file:
 - Add a compiler flag to your `.cargo/config.toml` file: `-C link-arg=-Tdefmt.x`.
@@ -440,25 +459,3 @@ next # Step to the next line of code
 ```
 
 _Remark: In VS Code, you can install the `probe-rs-debug` extension to use the `probe-rs` debugger._
-
-## HTTP notifications
-
-The setup of HTTP communication in Rust is more difficult than in MicroPython. On the other hand, it is more powerful and flexible.
-
-1. Make an account on [Ntfy](https://docs.ntfy.sh).
-
-2. Install the mobile Ntfy app on your phone (optional) or use another platform to receive notifications.
-
-3. Try publishing a notification from you command line using `curl`:
-
-    ```bash
-    curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
-    ```
-
-Instead of using `curl` you can also use your Pico to send notifications.
-
-```bash
-cargo embed --example http-notifications
-```
-
-> **Exercise**: Make the messages emitted to `ntfy` by the Pico prettier or more informative (e. g. containing some numerical data).

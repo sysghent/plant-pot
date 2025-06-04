@@ -12,7 +12,7 @@ Please bring:
 
 - **Laptop**
 - **Micro-USB cable**
-- **Water container** (e.g. a cup of water)
+- **Water container** (or a dry vs. wet plant pot)
 
 ### Provided
 

@@ -1,5 +1,3 @@
-Here is the corrected version of your text, with grammar and spelling mistakes fixed for clarity and accuracy.
-
 # Workshop: Make a Smart Plant Pot
 
 *Notes for a workshop organized by Hugo & Willem in Ghent on June 4, 2025, for [SysGhent](https://sysghent.be/events/plant-pot).*

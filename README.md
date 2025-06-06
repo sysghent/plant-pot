@@ -667,7 +667,7 @@ pub async fn measure_moisture(mut adc: Adc<'static, Async>, mut moisture_pin: Ch
 
 The sending task is an async task because we are not interested in measurements that are closer than 500 milliseconds apart. The `Ticker` is used to wait for the next measurement interval and allow other async tasks to run.
 
-The `publisher` is used to send the moisture value to the channel. The `publish_immediate` method is used to send the value immediately and drops any old values not yet consumed by a receiving task.
+The `publisher` is used to send the moisture value to the channel. The `publish_immediate` method is used to send the value immediately and drops any old values not yet consumed by a receiving task. Note: `PubSubChannel` is a single-value channel with overwrite semantics, not a cache.
 
 ## Pulse Width Modulation (PWM)
 
@@ -678,7 +678,7 @@ PWM can adjust the *average* output voltage of a GPIO pin by rapidly switching i
 You can try it out by running the example:
 
 ```bash
-cargo run --example calibrate-speed-water-pump
+cargo run --example calibrate-speed-motor
 ```
 
 This exercise will allow you to manually set the speed of the water pump by typing a number in the serial monitor.
@@ -701,7 +701,7 @@ Creating a PWM output with the PIO peripheral requires more work but may offer h
 
 ## On-Board LED
 
-On the Pico W, the on-board LED is connected via the Wi-Fi chip, not directly to a GPIO pin. This means you need to initialize the Wi-Fi chip before you can use the on-board LED. I have hidden most of the boilerplate code in the `src/wifi.rs` file. You can look at it, but you don't need to understand it completely.
+On the Pico W, the on-board LED is connected via the Wi-Fi chip (CYW43), not directly to a GPIO pin. This means you need to initialize the Wi-Fi chip before you can use the on-board LED.  Most of the boilerplate code for this is in the `src/wifi.rs` file.
 
 To blink the on-board LED, you can run the following command:
 
@@ -750,7 +750,7 @@ The lowest level of software abstraction provides direct access to the microcont
 * **Core Support Crate**: Enables access to the core processor's features, like interrupts and system timers. See [Cortex-M](https://crates.io/crates/cortex-m).
 * **Peripheral Access Crate (PAC)**: Built on top of the core support crate, the PAC contains auto-generated code for accessing hardware peripherals (like GPIO, ADC, etc.) based on SVD files from the chip manufacturer. See [RP235X-PAC](https://crates.io/crates/rp235x-pac).
 
-The Embassy framework builds on top of the PAC to provide a more intuitive and convenient API for accessing the hardware.
+The Embassy framework builds on top of the PAC and HAL to provide a more intuitive and convenient API for accessing the hardware.
 
 ### Medium Level
 

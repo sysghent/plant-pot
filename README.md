@@ -1,8 +1,8 @@
 # Workshop: make a smart plant pot
 
-Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025 for [SysGhent](https://sysghent.be/events/plant-pot). Register on [Mobilizon](https://mobilizon.be/events/3babf471-434d-431c-972c-b0bbae57b64c).
+_Notes for a workshop organised by Hugo & Willem in Ghent on 4th of June 2025 for [SysGhent](https://sysghent.be/events/plant-pot)._
 
-In this workshop you will learn how to create a plant pot that can automatically add water to itself when the moisture of the earth in the pot is too dry.
+In this workshop you will learn how to create a plant pot that can automatically add water to itself when the moisture of the earth in the pot is too dry (and notify over wifi).
 
 ## Overview
 
@@ -10,30 +10,39 @@ In this workshop you will learn how to create a plant pot that can automatically
 
 Please bring:
 
-- **Laptop**
-- **Micro-USB cable**
-- **Water container** (sponge, or a dry vs. wet plant pot)
+- Laptop (preferably with Linux installed)
+- Laptop charger
+- Micro-USB cable
+- Water container (sponge, or a dry vs. wet plant pot)
+
+It might be helpful to look up these Rust concepts at home before you join the workshop:
+
+- What are closures and what they capture.
+- The idea behind concurrency with asynchronous programming. Read some concrete examples of async Rust programs.
+- Taking ownership of local variables through a function call by value or move.
+
+See the [official Rust book](https://doc.rust-lang.org/book/) for more information on these concepts.
 
 ### Provided
 
 You can borrow from us (or bring your own):
 
 - [Raspberry Pico 2 W](https://datasheets.rapberrypi.com/picow/pico-2-w-datasheet.pdf): ~ 10 €
-- Analogue capacitive moisture sensor: ~ 5 €
-- JST SH 1mm Pitch 3 Pin to Male (not yet delivered): 2.50 €
-- 3V submersible water pump ~ 5 €
+- Analogue capacitive moisture sensor: ~ 4 €
+- JST SH 1mm Pitch 3 Pin to Male: 1.5 €
+- 3V submersible water pump ~ 4 €
 - Breadboard: ~ 5 €
 - Jumper wires ~ 1 €
 - LED ~ 0.5 €
 - MOSFET transistor ~ 0.5 €
-- resistor ~ 0.5 €
-- soldering iron
 
 You can buy the hardware that you used in the workshop at the end of the workshop.
 
+_Note: The Pico 2 W also has RISC-V cores, but for the moment they are less commonly used than the ARM cores. In case you want to use them and cross-compile for them, you will need to install the RISC-V Rust compiler toolchain and replace Cortex code by RiscV code. This workshop will focus on the ARM cores._
+
 ### Homework
 
-After the workshop, you should be able to continue and finalise the project at home. You will need to:
+After the workshop, you should be able to continue and finalize the project at home. You will need to:
 
 - Buy a plant: 10 €
 - Provide a waterproof case for the electronics: 2 €
@@ -49,57 +58,138 @@ Clone this repository first on your laptop:
 git clone https://github.com/sysghent/plant-pot.git
 ```
 
-This will allow you to easily run the example code in this repository and tweak it.
+This will allow you to easily run the example code in this repository and tweak it.i
+
+### Main development dependencies
 
 Next, you need to install Rust and add some exceptions to your `udev` rules to be able to flash the Raspberry Pico 2 W without root privileges.
 
 1. Install [`rustup`](https://www.rust-lang.org/tools/install).
 
-    ```bash
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    ```
+   ```bash
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   ```
 
-    On certain operating systems, the `rustup` package is already available in the package manager. For example, on Debian-based systems, you can install it with:
+   On certain operating systems, the `rustup` package is already available in the package manager. For example, on Debian-based systems, you can install it with:
 
-    ```bash
-    sudo apt install rustup
-    ```
+   ```bash
+   sudo apt install rustup
+   ```
+
+   **Warning**: Do not install it through `brew` on MacOS. This may lead to breakage.
 
 2. Verify that `cargo` and `rustc` are available in your shell's `PATH`:
 
-    ```bash
-    cargo --version
-    rustc --version
-    ```
-
-3. Install compiler components for local development and cross-compilation for the Pico target:
-
-    ```bash
-    rustup install stable --profile default
-    rustup target add thumbv8m.main-none-eabihf
-    ```
-
-4. Install `picotool` to flash the Raspberry Pico (in BOOTSEL mode). Debian / Ubuntu and Nix have `picotool` in their repositories. If you are using another type of Linux distribution, you will have to compile [from source](https://github.com/raspberrypi/picotool).
-
-    ```bash
-    sudo apt install picotool
-    picotool info
-    ```
-
-5. Update your `udev` rules to allow flashing without root privileges:
-
-    ```bash
-    sudo curl --output /etc/udev/rules.d/99-picotool.rules "https://github.com/raspberrypi/picotool/tree/master/udev/99-picotool.rules"
-    ```
-
-    Then reload the udev rules:
-
-    ```bash
-    sudo udevadm control --reload-rules
-    sudo udevadm trigger
+   ```bash
+   cargo --version
+   rustc --version
    ```
 
-_Note: The Pico 2 W also has RISC-V cores, but for the moment they are less commonly used than the ARM cores. In case you want to use them and cross-compile for them, you will need to install the RISC-V Rust compiler toolchain and replace Cortex code by RiscV code. This workshop will focus on the ARM cores._
+3. Add the `bin` folders inside `~/.cargo` and `~/.rustup` to the path of your shell. In this way, you can use `rustup` and binaries built with `cargo` anywhere.
+
+4. Install compiler components for local development and cross-compilation for the Pico target:
+
+   ```bash
+   rustup install stable --profile default
+   rustup target add thumbv8m.main-none-eabihf
+   ```
+
+## Configure a hardware debugger
+
+Most popular microcontrollers that are used for educational purposes, there is already some hardware debugging support (also called a **hardware debug probe**) on the board itself: such as the [Microbit](https://microbit.org/) or the [ESP32](https://www.espressif.com/en/products/socs/esp32).
+
+Having this debug probe allows you to debug the code running on the target Pico using GDB or other debugging tools through the debug probe.
+
+A debug probe comes in the form of a small secundary chip that can be used to debug the main microcontroller on the board.
+
+The Pico family of microcontrollers does not have this feature built-in. You have two options for debugging a Pico:
+
+- It is possible to turn a spare Raspberry Pico into a hardware debugging probe for another Pico.
+- You buy (or borrow) an official Rasberry Pi hardware debug probe.
+
+In this workshop we will do the first option. If you get stuck, feel free to ask for a hardware debugger if you have trouble making your own.
+
+### Turning a normal Pico into a debugger Pico
+
+The Raspberry foundation provides images for the Pico's that can be flashed to turn a Pico into a hardware debugging mode.
+
+1. Download the latest `debugprobe_on_pico2.uf2` flash image from the official [`debugprobe`](https://github.com/raspberrypi/debugprobe/releases).
+
+2. Attach the Pico to your laptop while holding the white BOOTSEL button. A mass storage device will appear in your file manager. It will be called something like `RP2350`.
+
+3. Drop the downloaded `uf2` file on the mass storage drive emulated by the Pico. Wait for a fraction of a second while the Pico unmounts and reboots as a fres `debugprobe`.
+
+Now you have successfully made a cheap hardware debugging probe.
+
+### Wire target to debugger
+
+Let's make some aliases:
+
+- Assume **D** is the homemade debug probe (a Pico).
+- Assume **T** is the target Pico.
+
+Right now, there is no cabling yet between the debug probe and the target Pico. The cables should be connected such that **D** can detect **T** over the SWD debugging protocol.
+
+_**Important**: For this step you need to have a JST-SH cable. You can find them on [Kiwi](https://www.kiwi-electronics.com/en/jst-sh-1mm-pitch-3-pin-to-male-headers-cable-100mm-long-19930), but they are hard to find.
+
+1. Plug the white connector of the JST cable into the SWD socket of **D**.
+2. Place **T** and **D** in parallel with USB ports facing upwards (to prevent confusion).
+3. Connect the male jumper pins.
+   The three male header pins should be connected to **D** as follows:
+
+   - **T** left (yellow) <-> **D** pin n. 5
+   - **T** middle (black) <-> **D** pin n. 3
+   - **T** right (orange) <-> **D** pin n. 4
+
+   Instead of pin number, you can als use the pin names:
+
+   - **T** SWCLK <-> **D** GP3
+   - **T** SWDIO <-> **D** GP2
+   - **T** GND <-> **D** GND
+
+4. Provide power to **T** with only one USB cable by forwarding it from the power of **D**:
+
+   - **T** GND pin n. 38 <-> **D** pin n. 38 (connect ground)
+   - **T** VSYS pin n. 39 <-> **D** pin n. 39 (connect power supply)
+
+_Remark: You can also connect **T** to **D** for UART communication. However, I have not needed it until now._
+
+### Configure flashing from laptop
+
+There is still one step remaining: we have to configure our laptop's development environment to enable flashing (this holds for any microcontroller with a debugger on board or external).
+
+1. Install `cargo-embed`, which is included in the `probe-rs` tools suite.
+
+   ```bash
+   cargo install probe-rs-tools
+   ```
+
+2. Verify that `cargo-embed` is available in your shell's `PATH` (cargo-[CMD] can be called with `cargo [CMD]`):
+
+   ```bash
+   cargo embed --version
+   ```
+
+3. Add `udev` rules for `probe-rs` as described in [probe-rs documentation](https://probe.rs/docs/getting-started/probe-setup/). Follow the same steps as for `picotool`.
+
+   ```bash
+   sudo curl --output /etc/udev/rules.d/69-probe-rs.rules  "https://probe.rs/files/69-probe-rs.rules"
+   sudo udevadm control --reload-rules
+   sudo udevadm trigger
+   ```
+
+Now you can flash new changes in the source code directly to the target Pico (without re-plugging or holding the BOOTSEL button). The debug probe Pico will function as an intermediary between your laptop and the target Pico.
+
+```bash
+cargo run --example external-blink
+```
+
+You should see two progress bars running to completion in your terminal. As soon as the flash process is finished:
+
+- **T** will start running the new code.
+- A debug server will be started on **D** so that you can step through your code while it runs on **T**.
+
+The Pico has quite a lot of flash memory. Embassy-produced binaries may not fit on small microcontrollers. [Min-sized Rust](https://github.com/johnthagen/min-sized-rust) provides tips for fitting Rust binaries on smaller chips.
 
 ## Editors / IDE / development environment
 
@@ -127,29 +217,25 @@ Look at the official Pico 2 W "pinout" SVG diagram provided in the [./cheatsheet
 
 _**Warning**: Disconnect the USB cable from the probe to prevent hardware damage, until you have completed the wiring._
 
-Pick a pin where the voltage is high (or can be set high), close to a ground pin. If you put an LED in between, it should light because of the current flowing from the high to the ground pin.
+Pick a GPIO pin (look at the green boxes in the pinout diagram) that is easy to find (because you need to count if you put it somewhere in the middle) and close to a ground pin.
 
-Unplug your Pico and plug it back in while holding the "BOOTSEL" button. This will attach the Pico as a mass storage device.
-
-Run `picotool info` to verify that the Pico is connected and ready to be flashed. Run the following command to run a basic "Hello World" program on the Pico:
+Put the long leg of the LED into the chosen GPIO pin, for example GPIO 16. Put the short leg into the ground. If you want to be really cautious, you can put a resistor of around 100 Ohm in series.
 
 ```bash
-cargo run --example on-board-blink
+cargo run --example external-blink
 ```
 
-The mass storage device should now be automatically unmounted and the Pico should reboot into the program that you just flashed.
+The connected LED start flashing.
 
-You should see the on-board LED blinking.
-
-Before you dip your toes into the rest of the code in this workshop, it might helpful to read about the basics of the Rust programming language. A good starting point is the [Rust book](https://doc.rust-lang.org/book/).
-
-**Exercise**: Make sure that you understand the concepts of `struct`s, `impl` blocks, and `async` functions in Rust.
+_Before you dip your toes into the rest of the code in this workshop, it might helpful to read about the basics of the Rust programming language. A good starting point is the [Rust book](https://doc.rust-lang.org/book/)._
 
 To check if your code compiles and satisfies basic style conventions, you can run:
 
 ```bash
 cargo clippy --examples
 ```
+
+Try to make a typo in the `external-blink.rs` file and retry `cargo clippy --examples`. See what happens. You editor should detect an error and warn you. If this is not the case, please ask for help.
 
 The Embassy framework, used in the project, provides an asynchronous executor that can be used to run many asynchronous tasks concurrently. Embassy tasks are run cooperatively: we assume they will give up (yield) control voluntarily to other tasks.
 
@@ -177,7 +263,9 @@ You might be thinking:
 
 Below the surface, Embassy uses hardware timers and interrupts to put the CPU of the Pico to sleep while it is _waiting_. This is more efficient than constantly looping and running an if-then check, as is often done in Python (think: `while True:`).
 
-The flavour of Embassy that is used in this workshop is located in a crate [`embassy-rp`](https://docs.embassy.dev/embassy-rp/git/rp235xb/index.html). This crate contains useful abstractions that correspond to hardware components on the Raspberry Pico 2 W, such as GPIO pins, ADC channels, and timers.
+In general, using Rust and Embassy for microcontrollers (instead of MicroPython) **may improve performance and energy-efficiency significantly**.
+
+To use Embassy on a particular model of microcontroller, you need some glue. This glue comes in the shape of a kind of "adapter" crate. In this workshop the adapter crate is [`embassy-rp`](https://docs.embassy.dev/embassy-rp/git/rp235xb/index.html). This crate contains useful abstractions that correspond to hardware components on the Raspberry Pico 2 W, such as GPIO pins, ADC channels, and timers.
 
 Let's take a closer look at the `Ticker` type:
 
@@ -187,7 +275,7 @@ let mut ticker: Ticker = Ticker::every(Duration::from_millis(500));
 
 The `Duration` type (used on the previous sample) is a generic type offered by Embassy. This means you could easily port the blinker example to other chip architectures (if they support Embassy).
 
-> **Exercise**:  Learn about the `Duration` type in Embassy. Modify the code in the main loop to make the LED blink faster or slower.
+> **Exercise**: Learn about the `Duration` type in Embassy. Modify the code in the main loop to make the LED blink faster or slower.
 
 More advanced books that contain large sections about asynchronous programming are:
 
@@ -215,18 +303,21 @@ bind_interrupts!(struct Irqs {
 
 #[main]
 async fn main(_spawner: Spawner) -> ! {
-    let p = embassy_rp::init(config::Config::default());
+   let p = embassy_rp::init(config::Config::default());
+   loop {
+      yield_now().await;
+   }
 }
 ```
 
 As you can see, there are two strange lines on top of the file.
 
 - `#![no_std]` means that the program does not use the standard library. Embedded systems are too small for the standard library.
-- `#![no_main]` means that the program does not have a typical `main` function as on normal operating systems. Instead, calling and creating the `main` function is completely handled by the Embassy framework.
+- `#![no_main]` means that the program does not have a typical `main` function (with arguments or exit code) as on normal operating systems. Instead, calling and creating the `main` function is completely handled by the Embassy framework.
 
 Then there are two `use x as _;` lines. These crates don't expose functions or public modules to be used, but they contain set-up code that should be included at least one in your embedded program.
 
-- The `panic_probe` crate provides a panic handler that is compatible with Embassy.  Panics are **fatal errors**. Every embedded program needs a panic handler, because traditional panics would unwind or abort and yield control back to the operating system. This operating system is absent, so we have to tell the compiler how to handle panics. Usually, this means going in an infinite loop.
+- The `panic_probe` crate provides a panic handler that is compatible with Embassy. Panics are **fatal errors**. Every embedded program needs a panic handler, because traditional panics would unwind or abort and yield control back to the operating system. This operating system is absent, so we have to tell the compiler how to handle panics. Usually, this means going in an infinite loop.
 
 - The `defmt_rtt` is not useful for the moment, but once you have configured a hardware debugger, it will allow you to log messages to the debugger console. This is useful for debugging your program.
 
@@ -238,49 +329,124 @@ There is a macro-call `embassy_rp::bind_interrupts!` that binds hardware interru
 
 The `spawner` argument allows users to spawn asynchronous tasks. Keep in mind, however, that each task should be non-generic and completely specified at compile time. This is because the Embassy framework does not support dynamic task creation at runtime.
 
+The last line `loop { yield_now().await }` may seem unnecessary. The reason I have to write it is because the return type of `main` is "never" (written as `!`). The never output type is the type for a program that never ends.
+
+Because of the signature of `main`, we cannot simply escape the `main` function. Running this program is the only thing that happens on the microcontroller. So we have to keep looping, even if we finished our work already.
+
+## Simple logging
+
+RTT (Real-Time Transfer) is a logging protocol that can be used on top of an SWD connection. It does not require to specify the Baud rate and so on.
+
+The `defmt` crate is the most popular crate for logging from embedded Rust programs. It exports macros like `info`, `debug`, similar to the macros in the `log` or `tracing` crates of standard Rust.
+
+For the debug probe to actually show the log output from the target, you need to enable a "transport". In the case of `defmt` it is mostly `RTT` transport using the `defmt-rtt` crate. The `defmt-rtt` crate could be compared `tracing-subscriber` or other mainstream log consumers.
+
+1. Add `defmt` and `defmt-rtt` as dependency to your `Cargo.toml` file. Also enable the `defmt` features for all existing dependencies that have it.
+2. Import the `defmt-rtt` module in your binary or library:
+
+   ```rust
+   use defmt_rtt as _;
+   ```
+
+   This may seem useless but it allows the setup of some data that is necessary to link the binary against the `defmt-rtt` crate.
+
+3. Add a compiler flag under the current target in `.cargo/config.toml` file: `-C link-arg=-Tdefmt.x`.
+
+   ```toml
+   [target.thumbv8m.main-none-eabihf]
+   rustflags = [
+     "-C",
+     "link-arg=--nmagic",
+     "-C",
+     "link-arg=-Tlink.x",
+     "-C",
+     "link-arg=-Tdefmt.x",
+     "-C",
+     "target-cpu=cortex-m33",
+   ]
+   ```
+
+4. Specify the log-level for `defmt` in the `.cargo/config.toml` file:
+
+   ```toml
+   [env]
+   DEFMT_LOG = "debug"
+   ```
+
+5. Enable `rtt` in the `Embed.toml` file:
+
+   ```toml
+   [default.rtt]
+   enabled = true
+   ```
+
+6. Add invocations of the `defmt` macros throughout your library or binary code (as necessary). For example, you could write:
+
+   ```rust
+   use defmt::info;
+
+   async main() -> ! {
+      loop {
+         info!("A new iteration of the loop has started.");
+      }
+   }
+   ```
+
+   There is nothing stopping you from adding such statements to library code.
+
+7. Compile your binary, flash it and run it on the target Pico 2 W:
+
+   ```bash
+   cargo run --example on-board-blink
+   ```
+
+   This should open an RTT console that shows the log messages emitted by the `defmt` statements in your code.
+
 ## USB serial input / output
 
-For this section, you can detach all attached jumper wires and components from the Raspberry Pico, except for the USB.
+You may also wish to send input to the Pico. This cannot be done with the debugger (as far as I know). You need to setup a serial connection with your laptop. This usually means attaching a second cable from your laptop to the Pico.
 
-Preparation for serial IO:
+Required steps to be able to start up a serial monitor (a kind of terminal) with the target, which is connected over USB:
 
 1. Add yourself to the `dialout` group to be able to access the serial port without root privileges:
 
-    ```bash
-    sudo usermod -aG dialout $USER
-    ```
+   ```bash
+   sudo usermod -aG dialout $USER
+   ```
 
-    Log out and log back in to apply the changes.
+   Log out and log back in to apply the changes.
 
 2. Run the serial echo example:
 
-    ```bash
-    cargo run --example serial-echo
-    ```
+   ```bash
+   cargo run --example serial-echo
+   ```
 
 3. Install the `tio` tool to be able to read the serial output of the Raspberry Pico:
 
-    ```bash
-    sudo apt install tio
-    ```
+   ```bash
+   sudo apt install tio
+   ```
+
+   If you are unable to install or configure `tio`, you can also try `minicom` instead.
 
 4. List serial devices with `tio` (if you receive a "permission denied" error, you may need to re-login or reboot first). Look for the section _by-id_, which is more stable than the _by-path_ section:
 
-    ```bash
-    tio --list
-    ```
+   ```bash
+   tio --list
+   ```
 
 5. Connect to the Pico from your laptop using a virtual serial connection that runs over USB (your id may be different):
 
-    ```bash
-    tio /dev/serial/by-id/usb-c0de_USB-serial_example-if00
-    ```
+   ```bash
+   tio /dev/serial/by-id/usb-c0de_USB-serial_example-if00
+   ```
 
 6. If you are not able to connect, you can try different parameters for the serial connection or a different device path.
 
-    ```bash
-    tio -s 1 -d 8 -p none -b 9600 /dev/ttyACM1
-    ```
+   ```bash
+   tio -s 1 -d 8 -p none -b 9600 /dev/ttyACM1
+   ```
 
 From now on, you can send bytes to the Pico and also receive bytes from the Pico. All keyboard commands for `tio` are listed in [GitHub](https://github.com/tio/tio#32-key-commands). The most important one is `ctrl-t q` to quit the serial monitor.
 
@@ -314,7 +480,7 @@ From now on, you need to have a moisture sensor connected to the Raspberry Pico.
 - the GND pin to a ground pin on the Pico,
 - and the signal pin to one of the ADC-capable pins on the Pico. This is the part that provides information to the Pico about how much moisture is in the soil.
 
-A microcontroller is not continuously powered, but turns millions of times per second (CPU clock cycles). This means that we cannot really have a continuous measurement of the moisture in the soil. Instead, it is a discrete measurement that we can take at regular intervals.
+A microcontroller is not continuously powered, but turns on and off millions of times per second (CPU clock cycles). This means that we cannot really have a continuous measurement of the moisture in the soil. We have to obtain digital measurements of the analogue signal and feed the measurements to the CPU (which expects digital values).
 
 We have to use the ADC (Analog-to-Digital Converter) of the Raspberry Pico to measure the moisture in the soil. The ADC converts the analog signal from the moisture sensor into a digital value that can be processed by the microcontroller.
 
@@ -326,7 +492,7 @@ let moisture_adc_channel = Channel::new_pin(p.PIN_26, Pull::None);
 let level = adc_component.read(&mut moisture_adc_channel).await.unwrap();
 ```
 
-Notice you need to instantiate the `Adc` component first, which is a handle to the ADC hardware on the Raspberry Pico. Then you need to create a `Channel` that represents the pin you want to use for reading the moisture sensor.
+Notice you need to instantiate the `Adc` component first, which is a handle to the ADC hardware on the Raspberry Pico. You also need to create an `ADC` channel that represents an analogue input. Calling the `read` method on the ADC component, will wait for and take the first digital measurement of the ADC.
 
 > **Exercise**: Find all the pins on the Pico that can be used as ADC inputs.
 
@@ -334,13 +500,7 @@ Next:
 
 > **Exercise**: How many bits are used by the ADC on the Raspberry Pico? How many different values can it measure? Is this standard across all microcontrollers?
 
-Now you can flash an example program on your Pico. Remember from last time that you have to hold the "BOOTSEL" button while plugging in the Pico to mount it as a mass storage device.
-
-```bash
-cargo run --example calibrate-moisture-sensor
-```
-
-I created a simple program that can measure the moisture in the soil using ADC. The main loop has this code:
+You can now calculate the moisture in the soil with some constants and helper function (from the ADC level). You roughly need these functions:
 
 ```rust
 let level = adc.read(&mut moisture_pin).await.unwrap();
@@ -348,21 +508,121 @@ let voltage = adc_reading_to_voltage(level);
 let moisture = voltage_to_moisture(voltage);
 ```
 
-Notice that we need a handle to the ADC component and also a pin configured as an ADC channel.
-
-Now you probably want some output from the moisture sensor over USB. So open up a serial monitor on your laptop, while the Pico is running.
+However, the function bodies in the example code are empty.
 
 > **Exercise**: Fill in the `todo!` macro-calls inside the bodies of the conversion functions `adc_reading_to_voltage` and `voltage_to_moisture`. Hint: these functions are similar to the `map` function in ArduinoIDE.
 
-Maybe more difficult:
+You can now flash an example program that can be used to calibrate the moisture sensing on your Pico.
 
-> **Exercise**: In which situations would need to sample multiple ADC values in on read?
+```bash
+cargo run --example calibrate-moisture-sensor
+```
+
+You should be able to see output through a serial monitor or RTT console on you laptop after flashing. Try connecting the moisture sensor and dipping it in water. Do you seen any changes?
+
+- Does more water result in a larger voltage?
+- How low and how high are voltages?
+
+Experiment with a cup of water or sponge. Reflash your program until you are satisfied with the result. The result should ideally be a floating number between 0 and 1 or a moisture percentage.
+
+## Debugging with GDB
+
+Once you start creating slightly more complicated embedded programs, you might want to
+
+- introspect the values of local variables
+- follow execution flow
+
+For this, you need a piece of software called a debugger. The most commonly used debugger for Rust and C, is [GDB](https://en.wikipedia.org/wiki/GNU_Debugger).
+
+_Remark: In VS Code, you can install the `probe-rs-debug` extension to use the `probe-rs` toolkit for debugging. It uses some other kind of protocol than `gdb`. See [instructions](https://probe.rs/docs/tools/debugger/)_
+
+### Setup of `cargo-embed`
+
+Adjust the `Embed.toml` file in the root of this repository if necessary. This file configures the behaviour of the `cargo embed` command when run on your laptop.
+
+For example, if the configuration contains the following, a GDB debug session server will be started and the loaded program will be reset to the first instruction.
+
+```toml
+[default.gdb]
+enabled = true
+
+[default.reset]
+halt_afterwards = true
+```
+
+Prevent lines being merged or re-ordered during the build step of your program. This kind of changes can make it harder for the debugger to stop at the right breakpoints. Add the following to `Cargo.toml`:
+
+```toml
+[profile.dev]
+debug = 2
+opt-level = 0
+```
+
+To be sure the new configuration is used, you can reset the `target` build cache with a `clean` and build again:
+
+```bash
+cargo clean
+cargo build --example [BINARY_EXAMPLE_NAME]
+```
+
+### Starting a GDB client
+
+While searching for an appropriate GDB package, look for one that supports the architecture of your target chip. In the case of a Pico 2, `gdb` needs `ARM` support built-in.
+
+Install the multi-architecture version of `gdb`:
+
+```bash
+sudo apt-get install gdb-multiarch
+```
+
+Then run the following command to create and connect a `gdb` debugging client:
+
+```bash
+gdb-multiarch target/thumbv8m-none-eabi/debug/[BINARY_EXAMPLE_NAME]
+```
+
+_Note: the command may also be `gdb`._
+
+Within the `gdb` client on your laptop, you have to connect to the running `GDB` server on the debug Pico:
+
+```gdb
+target remote :1337
+monitor reset halt # optionally resets to the first instruction
+tui enable
+```
+
+Otherwise you can tell `gdb` to execute these commands automatically by writing them in `.gdbinit` file in the root of this repository:
+
+### Common GDB commands
+
+Breakpoints can be set in the `gdb` client by using the `break` command followed by a line number or function name:
+
+```gdb
+break [FUNCTION_NAME]  # Set a breakpoint at a specific function
+break [LINE_NUMBER]  # Set a breakpoint at a specific line number
+break [FILE_NAME]:[LINE_NUMBER]  # Set a breakpoint at a specific line in a file
+```
+
+You can also write hardware breakpoints directly in your code with `cortex_m::asm::bkpt()`.
+
+To progress throughout the execution of your debugged program you can use:
+
+```gdb
+continue  # Continue execution until the next breakpoint is hit
+next # Step to the next line of code
+```
+
+For introspection of variables
+
+```gdb
+print [VAR_NAME]
+```
 
 ## Water pump
 
 After reverse-engineering the parameters for the moisture sensor, we can now use the data to control a water pump.
 
-The water pump is a small 3V submersible pump that can be controlled by a GPIO pin (which may be wired to a transistor) on the Raspberry Pico.  The transistor acts as a switch that can be controlled by the GPIO pin on the Raspberry Pico.
+The water pump is a small 3V submersible pump that can be controlled by a GPIO pin (which may be wired to a transistor) on the Raspberry Pico. The transistor acts as a switch that can be controlled by the GPIO pin on the Raspberry Pico.
 
 _**Import**: For protecting the Pico you should put a diode in the circuit with the pump, to prevent current from flowing back into the Pico when the pump is turned off. This is called a flyback diode._
 
@@ -423,7 +683,7 @@ cargo run --example calibrate-speed-water-pump
 
 The first exercise will allow you to manually set the speed of the water pump by typing a number in the serial monitor.
 
-> **Exercise**: Write a function that parses the bytes  coming in over serial connection into moisture numbers.
+> **Exercise**: Write a function that parses the bytes coming in over serial connection into moisture numbers.
 
 Next, you should try to adjust the speed of the water pump based on the received intensity numbers.
 
@@ -439,9 +699,19 @@ The Pico board also has multiple PIO peripherals. This is a programmable input/o
 
 Creating a PWM output with the PIO peripheral requires more work, but may be more performant than using simpler ways to drive PWM outputs. See <https://github.com/embassy-rs/embassy/blob/main/examples/rp235x/src/bin/pio_pwm.rs>
 
+## On-board blink
+
+Strangely, the GPIO pin 25 has been re-assigned to the on-board WiFi chip. This means you need to initialize the Wifi chip before you can use the on-board LED. I have hidden most of the dirty work in the `src/wifi.rs` file. You can have a look at it, but you don't need to understand it completely.
+
+To just blink the on-board LED, you can run the following command:
+
+```bash
+cargo run --example on-board-blink
+```
+
 ## HTTP notifications
 
-The setup of HTTP communication in Rust is more difficult than in MicroPython. On the other hand, it is more powerful and flexible.
+The setup of wireless communication in Rust is more difficult than in MicroPython. On the other hand, it may be more powerful and flexible.
 
 1. Make an account on [Ntfy](https://docs.ntfy.sh).
 
@@ -449,9 +719,9 @@ The setup of HTTP communication in Rust is more difficult than in MicroPython. O
 
 3. Try publishing a notification from you command line using `curl`:
 
-    ```bash
-    curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
-    ```
+   ```bash
+   curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
+   ```
 
 Instead of using `curl` you can also use your Pico to send notifications.
 
@@ -459,8 +729,8 @@ Now, you should configure your Wifi's authentication details in the [.cargo/conf
 
 ```toml
 [env]
-PASSWORD = "?"      # WiFi password
-SSID = "?"          # WiFi SSID
+PASSWORD = "?" # WiFi password
+SSID = "?" # WiFi SSID
 ```
 
 After filling in the secrets (don't commit them to GitHub), you can try out a program that will send notifications regularly to the Ntfy service. If you subscribe to the associated channel / topic, you can receive them on your phone or laptop.
@@ -473,7 +743,7 @@ cargo run --example http-notifications
 
 ## Levels of abstraction in embedded Rust
 
-This section  provides an overview of the different levels of abstraction that can be used when programming microcontrollers in Rust (or other languages).
+This section provides an overview of the different levels of abstraction that can be used when programming microcontrollers in Rust (or other languages).
 
 ### Low level
 
@@ -499,265 +769,10 @@ Normally, for commonly used micro-controllers, there should at least be one good
 
 For the Raspberry Pico 2 W, `embassy` (and the plugin `embassy-rp`) come the closest to a real BSP.
 
-### More reading material
+## More reading material
 
-Hands-on embedded Rust books:
+Interesting books about embedded Rust:
 
-- There is a book for beginners in embedded Rust:  [Rust Discovery Embedded book](https://docs.rust-embedded.org/discovery-mb2/). It assumes you have bought a Microbit v2 (20 euros).
+- There is a book for beginners in embedded Rust: [Rust Discovery Embedded book](https://docs.rust-embedded.org/discovery-mb2/). It assumes you have bought a Microbit v2 (20 euros).
 - There is also a book about embedded Rust using an STM32 chip: [Embedded Rust book](https://docs.rust-embedded.org/book/).
 - Another book about Rust and the Pico 2 [Pico Pico](https://pico.implrust.com)
-
-## Using small microcontrollers
-
-In case you work with smaller micro-controllers than the Pico, you can follow the tips no [Min-sized Rust](https://github.com/johnthagen/min-sized-rust) to be able to fit a Rust binary on the chip.
-
-The most important tip is probably compiling with `--release` and using the `opt-level = "s"` option in the `Cargo.toml` file.:
-
-```toml
-[profile.release]
-opt-level = "s"
-```
-
-This will optimize the binary size, but it will also make the code run slower.
-
-## Using a hardware debugger (if hardware available)
-
-Most popular microcontrollers that are used for educational purposes, there is already some hardware debugging support (also called a **hardware debug probe**) on the board itself: such as the [Microbit](https://microbit.org/) or the [ESP32](https://www.espressif.com/en/products/socs/esp32).
-
-Having this debug probe allows you to debug the code running on the target Pico using GDB or other debugging tools through the debug probe.
-
-A debug probe comes in the form of a small secundary chip that can be used to debug the main microcontroller on the board.
-
-The Pico family of microcontrollers does not have this feature built-in. However, it is possible to turn a spare Raspberry Pico into a hardware debugging probe for another Pico.
-
-If you have the right calbes, sockets and pins, you can turn a spare Pico into a real hardware debugging probe for your current Pico:
-
-- One side is [JST-SH](https://www.kiwi-electronics.com/en/jst-sh-1mm-pitch-3-pin-to-male-headers-cable-100mm-long-19930)
-- The other side has male pins that can be plugged in a breadboard
-- Your Pico has a socket that can fit the JST-SH
-
-### Flashing a `picoprobe`
-
-The Raspberry foundation provides images for the Pico's that can be flashed to turn a Pico into a hardware debugging mode.
-
-1. Download the latest `debugprobe_on_pico2.uf2` flash image from the official [`picprobe`](https://github.com/raspberrypi/debugprobe/releases) releases.
-
-2. Attach the Pico to your laptop while holding the white BOOTSEL mode.
-
-3. Drop the downloaded `uf2` file on the mass storage drive emulated by the Pico. Wait for a fraction of a second while the Pico unmounts.
-
-Now you have successfully made a cheap hardware debugging probe.
-
-We still need to wire this homemade probe to the target Pico that we want to debug.
-
-- Assume **D** is the homemade debug probe (a Pico).
-- Assume **T** is the target Pico.
-
-### SWD wiring
-
-Right now, there is no cabling yet between the debug probe and the target Pico. The cables should be connected such that **D** can detect **T** over the SWD debugging protocol.
-
-1. Find the cable that has a tiny white connector on one side (JST PH 3-pin) and three male jumber cables on the other side.
-
-2. Plug the white connector of the JST cable into the SWD socket of **D**.
-
-Place **T** and **D** in parallel  with USB ports facing upwards (to prevent confusion).
-
-The three male header pins should be connected to **D** as follows:
-
-- **T** left (yellow) <-> **D** pin n. 5
-- **T** middle (black) <-> **D** pin n. 3
-- **T** right (orange) <-> **D** pin n. 4
-
-Instead of pin number, you can als use the pin names:
-
-- **T** SWCLK <-> **D** GP3
-- **T** SWDIO <-> **D** GP2
-- **T** GND <-> **D** GND
-
-Provide power to **T** with only one USB cable by forwarding it from the power of **D**:
-
-- **T** GND pin n. 38 <-> **D** pin n. 38 (connect ground)
-- **T** VSYS pin n. 39 <-> **D** pin n. 39 (connect power supply)
-
-_Remark: You can also connect **T** to **D** for UART communication. Exercise: find out if this is really necessary and let me know._
-
-### Development setup
-
-1. Install `cargo-embed`, which is included in the `probe-rs` tools suite.
-
-    ```bash
-    cargo install probe-rs-tools
-    ```
-
-2. Verify that `cargo-embed` is available in your shell's `PATH` (cargo-[CMD] can be called with `cargo [CMD]`):
-
-    ```bash
-    cargo embed --version
-    ```
-
-3. Add `udev` rules for `probe-rs` as described in [probe-rs documentation](https://probe.rs/docs/getting-started/probe-setup/). Follow the same steps as for `picotool`.
-
-    ```bash
-    sudo curl --output /etc/udev/rules.d/69-probe-rs.rules  "https://probe.rs/files/69-probe-rs.rules"
-    sudo udevadm control --reload-rules
-    sudo udevadm trigger
-    ```
-
-### Flashing the target
-
-Adjust the `Embed.toml` file in the root of this repository if necessary. This file configures the behaviour of the `cargo embed` command when run on your laptop.
-
-For example, if the configuration contains the following, a GDB debug session server will be started and the loaded program will be reset to the first instruction.
-
-```toml
-[default.gdb]
-enabled = true
-
-[default.reset]
-halt_afterwards = true
-```
-
-You can now flash the target Pico 2 W with one of the examples without holding the white BOOTSEL button while plugging in. You can choose between the following commands:
-
-Flash with the `cargo embed` command, which will also open an RTT console:
-
-```bash
-cargo embed --example on-board-blink
-```
-
-This will compile and then flash the binary using the SWD connection between the debug probe and the target device. This may be a little bit slower than using the previous BOOTSEL approach, but it gives better debugging output and we don't have to re-plug the USB cable.
-
-Configure the `cargo embed` command as the default Cargo runner in [`.cargo/config.toml`](.cargo/config.toml), so you can run your embedded binary on the Pico directly with `cargo run`:
-
-```toml
-[target.thumbv8m.main-none-eabi]
-runner = "cargo embed --chip RP235x"
-```
-
-Now you can flash with `cargo run`, in exactly the same way as done previously (there were some issues with this command):
-
-```bash
-cargo run --example on-board-blink
-```
-
-### Using RTT for logging
-
-RTT (Real-Time Transfer) is a logging protocol that can be used on top of an SWD connection.
-
-Import the `defmt` crate to add log statemens throughout your code. Just import macro's such as `defmt::info!`, `defmt::error!`, and `defmt::warn!` to log messages, similar to how you would use `log::info!` in standard Rust.
-
-Then you have to enable a "transport" for `defmt` which is usally `RTT`, implemented by linking your code with the `defmt-rtt` crate. `defmt-rtt` is the analogue of the
-
-1. Add `defmt` and `defmt-rtt` as dependency to your `Cargo.toml` file. Also enable the `defmt` features for all existing dependencies that have it.
-2. Import the `defmt-rtt` module in your binary or library:
-
-    ```rust
-    use defmt_rtt as _;
-    ```
-
-    This may seem useless but it allows the setup of some data that is necessary to link the binary against the `defmt-rtt` crate.
-
-3. Add a compiler flag under the current target  in `.cargo/config.toml` file: `-C link-arg=-Tdefmt.x`.
-
-    ```toml
-    [target.thumbv8m.main-none-eabihf]
-    rustflags = [
-        "-C",
-        "link-arg=--nmagic",
-        "-C",
-        "link-arg=-Tlink.x",
-        "-C",
-        "link-arg=-Tdefmt.x",
-        "-C",
-        "target-cpu=cortex-m33",
-    ]
-    ```
-
-4. Specify the log-level for `defmt` in the `.cargo/config.toml` file:
-
-    ```toml
-    [env]
-    DEFMT_LOG = "debug"
-    ```
-
-5. Enable `rtt` in the `Embed.toml` file:
-
-    ```toml
-    [default.rtt]
-    enabled = true
-    ```
-
-6. Compile your binary (with `defmt::info!` statements), flash it and run it on the target Pico 2 W:
-
-    ```bash
-    cargo run --example on-board-blink
-    ```
-
-    This should open an RTT console that shows the log messages emitted by the `defmt::info!` statements in your code.
-
-### Starting a debugging session
-
- Prevent lines being merged or re-ordered during the build step of your program. This kind of changes can make it harder for the debugger to stop at the right breakpoints. Add the following to your `Cargo.toml`:
-
-```toml
-[profile.dev]
-debug = 2
-opt-level = 0
-```
-
-To be sure the new configuration is used, you can reset the `target` build cache:
-
-```bash
-cargo clean
-cargo run --example [BINARY_EXAMPLE_NAME]
-```
-
-Install the multi-architecture version of `gdb` to be able to debug the Raspberry Pi Pico board:
-
-```bash
-sudo apt-get install gdb-multiarch
-```
-
-The exact binary name may vary, but it is important that the installed `gdb` supports the architecture of your target chip. In the case of a Pico 2, `gdb` needs `ARM` support built-in.
-
-Configure the `Embed.toml` file to enable the `gdb` server:
-
-```toml
-[default.gdb]
-enabled = true
-```
-
-Then run the following command to create and connect a `gdb` debugging client:
-
-```bash
-gdb-multiarch target/thumbv8m-none-eabi/debug/[BINARY_EXAMPLE_NAME]
-```
-
-Within the `gdb` client on your laptop, you have to connect to the running `GDB` server on the debug Pico:
-
-```gdb
-target remote :1337
-monitor reset halt # optionally resets to the first instruction
-```
-
-_Remark: In VS Code, you can install the `probe-rs-debug` extension to use the `probe-rs` toolkit for debugging. It uses some other kind of protocol than `gdb`. See [instructions](https://probe.rs/docs/tools/debugger/)_
-
-### Jumping between breakpoints
-
-Breakpoints can be set in the `gdb` client by using the `break` command followed by a line number or function name:
-
-```gdb
-break [FUNCTION_NAME]  # Set a breakpoint at a specific function
-break [LINE_NUMBER]  # Set a breakpoint at a specific line number
-break [FILE_NAME]:[LINE_NUMBER]  # Set a breakpoint at a specific line in a file
-```
-
-You can also write hardware breakpoints directly in your code with `cortex_m::asm::bkpt()`.
-
-To progress throughout the execution of your debugged program you can use:
-
-```gdb
-continue  # Continue execution until the next breakpoint is hit
-next # Step to the next line of code
-```

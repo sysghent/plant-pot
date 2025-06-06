@@ -6,7 +6,7 @@ pkgs.mkShell {
 
   buildInputs = with pkgs; [
     cargo-binutils # For `cargo objdump` and `cargo size`
-    gdb
+    gdb-multitarget
     minicom
     openocd
     picotool

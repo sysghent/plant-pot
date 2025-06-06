@@ -106,8 +106,9 @@ A debug probe comes in the form of a small secondary chip that can be used to de
 
 The Pico family of microcontrollers does not have this feature built-in. You have two options for debugging a Pico:
 
-* It is possible to turn a spare Raspberry Pi Pico into a hardware debugging probe for another Pico.
-* Buy (or borrow) an official Raspberry Pi hardware debug probe.
+* It is possible to turn a spare Raspberry Pico into a hardware debugging probe for another Pico.
+* You buy (or borrow) an official Rasberry Pi hardware debug probe.
+* You manually force the target into BOOTSELF mode and flash with `picotool`. In that case, you will not be able to debug as easily (you will need a serial monitor).
 
 In this workshop, we will pursue the first option. If you get stuck, feel free to ask for a pre-made hardware debugger.
 

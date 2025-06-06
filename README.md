@@ -311,7 +311,7 @@ async fn main(_spawner: Spawner) -> ! {
 
 As you can see, there are two notable attributes at the top of the file.
 
-* `#![no_std]` means that the program does not use the standard library. Embedded systems are too small for the standard library.
+* `#![no_std]` means that the program does not use the standard library. Embedded systems are too small for the standard library. Instead of using `std::String`, you would a statically allocated `heapless::String`. Most `std` heap allocated container types have an analogue in `heapless`.
 * `#![no_main]` means that the program does not have a typical `main` function (with arguments or an exit code) as on a typical operating system. Instead, calling and creating the `main` function is completely handled by the Embassy framework.
 
 Then there are two `use x as _;` lines. These crates don't expose functions or public modules to be used, but they contain setup code that should be included at least once in your embedded program.
@@ -696,7 +696,7 @@ Next, you should try to adjust the speed of the water pump based on the received
 
 The Pico board also has multiple PIO peripherals. This is a programmable input/output peripheral that can be used to implement custom protocols and control devices.
 
-Creating a PWM output with the PIO peripheral requires more work but may offer higher performance than using the standard PWM hardware. See [Embassy's official example](https://github.com/embassy-rs/embassy/blob/main/examples/rp235x/src/bin/pio_pwm.rs) for the RP2040.
+Creating a PWM output with the PIO peripheral requires more work but may offer higher performance than using the standard PWM hardware. See [Embassy's official example](https://github.com/embassy-rs/embassy/blob/main/examples/rp235x/src/bin/pio_pwm.rs).
 
 ## On-Board LED
 
@@ -773,4 +773,4 @@ Interesting books about embedded Rust:
 
 * There is a book for beginners in embedded Rust: [The Discovery Book](https://docs.rust-embedded.org/discovery-mb2/). It assumes you have a Micro:bit v2 (\~€20).
 * There is also a book about embedded Rust using an STM32 chip: [The Embedded Rust Book](https://docs.rust-embedded.org/book/).
-* Another book about Rust and the Raspberry Pi Pico is [Pico, In-Depth](https://pico.implrust.com/). Note that it focuses on the **original Pico (RP2040)**, but many concepts are transferable to the Pico 2.
+* Another book about Rust and the Raspberry Pi Pico 2 is [Pico, In-Depth](https://pico.implrust.com/).

@@ -683,96 +683,95 @@ cargo run --example calibrate-speed-water-pump
 
 This exercise will allow you to manually set the speed of the water pump by typing a number in the serial monitor.
 
-> **Exercise**: Write a function that parses the bytes coming in over serial connection into moisture numbers.
+> **Exercise**: Write a function that parses bytes coming in over the serial connection into speed values.
 
-Next, you should try to adjust the speed of the water pump based on the received intensity numbers.
+Next, you should try to adjust the speed of the water pump based on the received speed numbers.
 
 * Listen for new numbers coming in over the serial connection.
 * Parse the numbers and convert them to a speed value.
-* Send the speed value through the sender of a `PubSubChannel` to another task.
+* Send the speed value through a `PubSubChannel` sender to another task.
 * Receive the speed value in the task that controls the water pump.
 * Compute the duty cycle based on the speed value and set the PWM output accordingly.
 
-> **Exercise**: Use the incoming numbers over serial USB to change the speed of the water pump dynamiccally at runtime.
+> **Exercise**: Use the incoming numbers over USB serial to change the speed of the water pump dynamically.
 
 The Pico board also has multiple PIO peripherals. This is a programmable input/output peripheral that can be used to implement custom protocols and control devices.
 
-Creating a PWM output with the PIO peripheral requires more work, but may be more performant than using simpler ways to drive PWM outputs. See <https://github.com/embassy-rs/embassy/blob/main/examples/rp235x/src/bin/pio_pwm.rs>
+Creating a PWM output with the PIO peripheral requires more work but may offer higher performance than using the standard PWM hardware. See [Embassy's official example](https://github.com/embassy-rs/embassy/blob/main/examples/rp235x/src/bin/pio_pwm.rs) for the RP2040.
 
-## On-board blink
+## On-Board LED
 
-Strangely, the GPIO pin 25 has been re-assigned to the on-board WiFi chip. This means you need to initialize the Wifi chip before you can use the on-board LED. I have hidden most of the dirty work in the `src/wifi.rs` file. You can have a look at it, but you don't need to understand it completely.
+On the Pico W, the on-board LED is connected via the Wi-Fi chip, not directly to a GPIO pin. This means you need to initialize the Wi-Fi chip before you can use the on-board LED. I have hidden most of the boilerplate code in the `src/wifi.rs` file. You can look at it, but you don't need to understand it completely.
 
-To just blink the on-board LED, you can run the following command:
+To blink the on-board LED, you can run the following command:
 
 ```bash
 cargo run --example on-board-blink
 ```
 
-## HTTP notifications
+## HTTP Notifications
 
-The setup of wireless communication in Rust is more difficult than in MicroPython. On the other hand, it may be more powerful and flexible.
+The setup of wireless communication in Rust is more complex than in MicroPython. On the other hand, it is more powerful and flexible.
 
-1. Make an account on [Ntfy](https://docs.ntfy.sh).
+1. Choose a topic name on [Ntfy](https://docs.ntfy.sh). For public topics, you do not need an account.
+2. Install the mobile Ntfy app on your phone (optional) or use another platform to receive notifications by subscribing to your topic.
+3. Try publishing a notification from your command line using `curl`:
 
-2. Install the mobile Ntfy app on your phone (optional) or use another platform to receive notifications.
+    ```bash
+    curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
+    ```
 
-3. Try publishing a notification from you command line using `curl`:
+Instead of using `curl`, you can also use your Pico to send notifications.
 
-   ```bash
-   curl -X POST https://ntfy.sh/sysghent -d "$USER will water the plants!"
-   ```
-
-Instead of using `curl` you can also use your Pico to send notifications.
-
-Now, you should configure your Wifi's authentication details in the [.cargo/config.toml](.cargo/config.toml) file of this repository.
+Now, you should configure your Wi-Fi's authentication details in the `.cargo/config.toml` file of this repository.
 
 ```toml
 [env]
-PASSWORD = "?" # WiFi password
-SSID = "?" # WiFi SSID
+PASSWORD = "?" # Your Wi-Fi password
+SSID = "?"     # Your Wi-Fi SSID
 ```
 
-After filling in the secrets (don't commit them to GitHub), you can try out a program that will send notifications regularly to the Ntfy service. If you subscribe to the associated channel / topic, you can receive them on your phone or laptop.
+After filling in the secrets (do not commit them to GitHub), you can try a program that will regularly send notifications to the Ntfy service. If you subscribe to the associated topic, you can receive them on your phone or laptop.
 
 ```bash
 cargo run --example http-notifications
 ```
 
-> **Exercise**: Make the messages emitted to `ntfy` by the Pico prettier or more informative (e. g. containing some numerical data).
+> **Exercise**: Make the messages emitted to `ntfy` by the Pico prettier or more informative (e.g., containing numerical data).
 
-## Levels of abstraction in embedded Rust
+## Levels of Abstraction in Embedded Rust
 
-This section provides an overview of the different levels of abstraction that can be used when programming microcontrollers in Rust (or other languages).
+This section provides an overview of the different levels of abstraction that can be used when programming microcontrollers in Rust.
 
-### Low level
+### Low Level
 
-The lowest level of abstraction for software running on a microcontroller, is the MCU. The MCU enables access to the core processor. See [Cortex-M](https://crates.io/crates/cortex-m).
+The lowest level of software abstraction provides direct access to the microcontroller's hardware registers.
 
-On top of the MCU, there always is a "peripheral access crate" (the PAC). This crate contains code generated from SVD files provided by the board manifacturer. See the [RP235X-PAC](https://crates.io/crates/rp235x-pac)
+* **Core Support Crate**: Enables access to the core processor's features, like interrupts and system timers. See [Cortex-M](https://crates.io/crates/cortex-m).
+* **Peripheral Access Crate (PAC)**: Built on top of the core support crate, the PAC contains auto-generated code for accessing hardware peripherals (like GPIO, ADC, etc.) based on SVD files from the chip manufacturer. See [RP235X-PAC](https://crates.io/crates/rp235x-pac).
 
-The Embassy framework builts on top of the PAC to provide a more intuitive / convenient API for accessing the hardware.
+The Embassy framework builds on top of the PAC to provide a more intuitive and convenient API for accessing the hardware.
 
-### Medium level
+### Medium Level
 
-In case you feel like the Embassy framework does not allow you do certaint things, you can fall-back to a more convential level of abstraction, without async/await.
+If the Embassy framework doesn't suit your needs, you can fall back to a more conventional level of abstraction without `async/await`.
 
-The "hardware access layer" (HAL) is a more convenient way to access the hardware of the microcontroller. It provides a higher level of abstraction than the PAC, but still allows you to access the hardware directly.
+The **Hardware Abstraction Layer (HAL)** is a more convenient way to access the hardware. It provides a higher level of abstraction than the PAC but still allows direct hardware access.
 
-The Pico 2 has [rp235x-hal](https://crates.io/crates/rp235x-hal) as a HAL crate. You can view the [examples](https://github.com/rp-rs/rp-hal/tree/main/rp235x-hal-examples), which were used to make this workshop.
+The Pico 2 has [rp235x-hal](https://crates.io/crates/rp235x-hal) as its HAL crate. You can view the [examples](https://github.com/rp-rs/rp-hal/tree/main/rp235x-hal-examples), which were used as a reference for this workshop.
 
-*Remark: If you want to be able to **kill async tasks**, you should not use Embassy, but instead use [RTIC](https://github.com/rtic-rs/rtic) which allow pre-emptive killing of running tasks. You can also assign priorities to different tasks, which may be required for sensitive applications. However, it is not yet stable.*
+*Remark: If you need to preempt tasks (i.e., interrupt a lower-priority task to run a higher-priority one), you should consider using [RTIC](https://github.com/rtic-rs/rtic). RTIC provides a different concurrency model based on preemption and priorities, which may be required for real-time applications.*
 
-### High level
+### High Level
 
-Normally, for commonly used micro-controllers, there should at least be one good board support package (also called BSP). These so-called packages are actually creates that have a very generic API, but less customisable. For example, in the case of the Microbit controller, the BSP is called [microbit](https://crates.io/crates/microbit) and it allows you draw visual shapes on the on-board LED array.
+For commonly used microcontrollers, there is often at least one good **Board Support Package (BSP)**. These are crates that provide a convenient, board-specific API, though they are sometimes less customizable than a HAL. For example, in the case of the Micro:bit controller, the BSP is called [microbit](https://crates.io/crates/microbit) and it allows you to draw shapes on the on-board LED array.
 
-For the Raspberry Pico 2 W, `embassy` (and the plugin `embassy-rp`) come the closest to a real BSP.
+For the Raspberry Pi Pico 2 W, `embassy` (and its `embassy-rp` plugin) come the closest to a full-featured BSP.
 
-## More reading material
+## More Reading Material
 
 Interesting books about embedded Rust:
 
-* There is a book for beginners in embedded Rust: [Rust Discovery Embedded book](https://docs.rust-embedded.org/discovery-mb2/). It assumes you have bought a Microbit v2 (20 euros).
-* There is also a book about embedded Rust using an STM32 chip: [Embedded Rust book](https://docs.rust-embedded.org/book/).
-* Another book about Rust and the Pico 2 [Pico Pico](https://pico.implrust.com)
+* There is a book for beginners in embedded Rust: [The Discovery Book](https://docs.rust-embedded.org/discovery-mb2/). It assumes you have a Micro:bit v2 (\~€20).
+* There is also a book about embedded Rust using an STM32 chip: [The Embedded Rust Book](https://docs.rust-embedded.org/book/).
+* Another book about Rust and the Raspberry Pi Pico is [Pico, In-Depth](https://pico.implrust.com/). Note that it focuses on the **original Pico (RP2040)**, but many concepts are transferable to the Pico 2.
